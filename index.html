@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loadout — Exercise Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F4F7;
+    --bg-elevated:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-2:#EAECF1;
+    --border:#DEE1E8;
+    --text:#12151B;
+    --text-dim:#5B6270;
+    --text-faint:#8A90A0;
+    --accent:#E4572E;
+    --accent-2:#2F6FED;
+    --accent-soft:rgba(228,87,46,0.12);
+    --accent2-soft:rgba(47,111,237,0.12);
+    --gold:#E3A008;
+    --shadow:0 1px 2px rgba(20,22,30,0.04), 0 8px 24px -12px rgba(20,22,30,0.12);
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0D0F13;
+      --bg-elevated:#15181F;
+      --surface:#171A21;
+      --surface-2:#1E222B;
+      --border:#282D38;
+      --text:#EDEFF3;
+      --text-dim:#9AA1B1;
+      --text-faint:#666D7E;
+      --accent:#FF7A54;
+      --accent-2:#5B93FF;
+      --accent-soft:rgba(255,122,84,0.14);
+      --accent2-soft:rgba(91,147,255,0.14);
+      --gold:#F0B429;
+      --shadow:0 1px 2px rgba(0,0,0,0.3), 0 12px 32px -14px rgba(0,0,0,0.6);
+      color-scheme: dark;
+    }
+  }
+  html.force-light{ color-scheme: light;
+    --bg:#F3F4F7;--bg-elevated:#FFFFFF;--surface:#FFFFFF;--surface-2:#EAECF1;--border:#DEE1E8;
+    --text:#12151B;--text-dim:#5B6270;--text-faint:#8A90A0;--accent:#E4572E;--accent-2:#2F6FED;
+    --accent-soft:rgba(228,87,46,0.12);--accent2-soft:rgba(47,111,237,0.12);--gold:#E3A008;
+    --shadow:0 1px 2px rgba(20,22,30,0.04), 0 8px 24px -12px rgba(20,22,30,0.12);
+  }
+  html.force-dark{ color-scheme: dark;
+    --bg:#0D0F13;--bg-elevated:#15181F;--surface:#171A21;--surface-2:#1E222B;--border:#282D38;
+    --text:#EDEFF3;--text-dim:#9AA1B1;--text-faint:#666D7E;--accent:#FF7A54;--accent-2:#5B93FF;
+    --accent-soft:rgba(255,122,84,0.14);--accent2-soft:rgba(91,147,255,0.14);--gold:#F0B429;
+    --shadow:0 1px 2px rgba(0,0,0,0.3), 0 12px 32px -14px rgba(0,0,0,0.6);
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+    transition:background .25s ease,color .25s ease;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  h1,h2,h3,.display{ font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer; color:var(--text); background:none; border:none; appearance:none; -webkit-appearance:none;}
+
+  #app{max-width:1200px; margin:0 auto; padding-bottom:64px;}
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:32px; height:32px; border-radius:9px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .brand-mark svg{width:18px; height:18px;}
+  .brand-name{font-weight:700; font-size:18px;}
+  .brand-name span{color:var(--accent);}
+  .theme-toggle{
+    display:flex; align-items:center; gap:2px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px;
+  }
+  .theme-toggle button{
+    width:30px; height:30px; border-radius:999px; border:none; background:transparent;
+    display:flex; align-items:center; justify-content:center; color:var(--text-faint);
+  }
+  .theme-toggle button.active{background:var(--surface); color:var(--accent); box-shadow:var(--shadow);}
+  .theme-toggle svg{width:15px;height:15px;}
+
+  .back-btn{
+    display:none; align-items:center; gap:6px; background:none; border:none; color:var(--text-dim);
+    font-size:14px; font-weight:600; padding:8px 0;
+  }
+  .back-btn svg{width:16px;height:16px;}
+  .view-group .back-btn{display:inline-flex;}
+
+  /* ---------- Views ---------- */
+  .view{display:none; padding:0 20px;}
+  .view.active{display:block; animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .hero{padding:28px 0 20px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.08em; color:var(--accent);
+    background:var(--accent-soft); padding:5px 10px; border-radius:999px; margin-bottom:14px;
+  }
+  .hero h1{font-size:34px; line-height:1.08; margin:0 0 10px; font-weight:700;}
+  .hero p{color:var(--text-dim); font-size:15px; max-width:520px; margin:0; line-height:1.5;}
+
+  .section-label{
+    display:flex; align-items:baseline; justify-content:space-between; margin:30px 0 14px;
+  }
+  .section-label h2{font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-faint); margin:0;}
+
+  /* ---------- Search ---------- */
+  .search-wrap{position:relative; margin-top:22px; max-width:480px;}
+  .search-icon{
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    width:18px; height:18px; color:var(--text-faint); pointer-events:none;
+  }
+  .search-input{
+    width:100%; padding:13px 42px 13px 42px; border-radius:14px;
+    background:var(--surface); border:1px solid var(--border); color:var(--text);
+    font-family:'Inter',sans-serif; font-size:14.5px; outline:none;
+    box-shadow:var(--shadow); transition:border-color .15s ease;
+  }
+  .search-input:focus{border-color:var(--accent);}
+  .search-input::placeholder{color:var(--text-faint);}
+  .search-clear{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    width:26px; height:26px; border-radius:50%; border:none; background:var(--surface-2);
+    color:var(--text-dim); display:flex; align-items:center; justify-content:center;
+  }
+  .search-clear svg{width:13px; height:13px;}
+  .search-results{
+    display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; z-index:30;
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px;
+    box-shadow:var(--shadow); max-height:360px; overflow-y:auto; padding:8px;
+  }
+  .search-results.show{display:block;}
+  .search-group-label{
+    font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--text-faint); padding:8px 10px 4px;
+  }
+  .search-result-row{
+    display:flex; align-items:center; gap:10px; width:100%; padding:9px 10px; border-radius:10px;
+    background:none; border:none; text-align:left; color:var(--text); font-size:13.5px;
+  }
+  .search-result-row:hover{background:var(--surface-2);}
+  .search-result-thumb{
+    width:32px; height:32px; border-radius:8px; background:var(--surface-2); flex-shrink:0;
+    overflow:hidden; display:flex; align-items:center; justify-content:center;
+  }
+  .search-result-thumb img{width:100%; height:100%; object-fit:contain;}
+  .search-result-name{font-weight:600;}
+  .search-result-sub{font-size:11.5px; color:var(--text-faint); margin-top:1px;}
+  .search-empty{padding:16px 10px; font-size:13px; color:var(--text-faint); text-align:center;}
+
+  .goal-endurance{background:var(--accent2-soft); color:var(--accent-2);}
+
+  /* ---------- Muscle grid ---------- */
+  .muscle-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px;
+  }
+  @media (min-width:640px){ .muscle-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:960px){ .muscle-grid{grid-template-columns:repeat(4,1fr);} }
+
+  .m-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:16px 14px 14px; text-align:left; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; gap:10px; transition:transform .18s ease, border-color .18s ease;
+  }
+  .m-card:hover{transform:translateY(-3px); border-color:var(--accent);}
+  .m-card:active{transform:translateY(0px) scale(.98);}
+  .m-figure{
+    position:relative; aspect-ratio:1/1; border-radius:var(--radius-md);
+    background:#FFFFFF; overflow:hidden;
+  }
+  .m-figure img{width:100%; height:100%; object-fit:cover; object-position:top; display:block;}
+  .m-figure.crop-bottom img{object-position:bottom;}
+  .m-figure.crop-middle img{object-position:center;}
+  .side-tag{
+    position:absolute; top:6px; right:6px; font-size:9px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--text-faint); background:var(--bg-elevated);
+    padding:2px 6px; border-radius:5px; z-index:3; border:1px solid var(--border);
+  }
+  .m-name{font-weight:700; font-size:15px;}
+  .m-count{font-size:12px; color:var(--text-faint);}
+
+  /* ---------- Group view ---------- */
+  .group-hero{
+    display:flex; gap:16px; align-items:center; padding:18px 0 8px;
+  }
+  .group-figure{
+    width:84px; height:84px; border-radius:20px; background:var(--surface-2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; flex-shrink:0;
+  }
+  .group-figure img{width:100%; height:100%; object-fit:contain; padding:6px;}
+  .group-title h1{font-size:26px; margin:0 0 4px;}
+  .group-title p{margin:0; color:var(--text-dim); font-size:13.5px;}
+
+  .autopick{
+    margin-top:22px; border-radius:var(--radius-lg); padding:18px;
+    background:linear-gradient(160deg, var(--accent-soft), var(--accent2-soft));
+    border:1px solid var(--border);
+  }
+  .autopick-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .autopick h3{margin:0 0 4px; font-size:17px;}
+  .autopick p{margin:0; font-size:13px; color:var(--text-dim); max-width:340px;}
+  .autopick-btn{
+    background:var(--text); color:var(--bg); border:none; padding:11px 18px; border-radius:999px;
+    font-weight:700; font-size:13.5px; display:flex; align-items:center; gap:8px; white-space:nowrap;
+  }
+  .autopick-btn svg{width:15px;height:15px;}
+  .autopick-result{margin-top:16px; display:none; flex-direction:column; gap:10px;}
+  .autopick-result.show{display:flex;}
+  .pick-row{
+    display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-md); padding:10px 12px;
+  }
+  .pick-idx{
+    width:26px; height:26px; border-radius:8px; background:var(--text); color:var(--bg);
+    font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .pick-info{flex:1; min-width:0;}
+  .pick-name{font-weight:700; font-size:14px;}
+  .pick-scheme{font-size:12px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; margin-top:2px;}
+
+  /* ---------- Exercise list ---------- */
+  .filter-row{display:flex; gap:8px; margin:26px 0 14px; overflow-x:auto; padding-bottom:2px;}
+  .chip{
+    flex-shrink:0; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:999px;
+    background:var(--surface); border:1px solid var(--border); color:var(--text-dim);
+  }
+  .chip.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+
+  .ex-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:30px;}
+  @media (min-width:640px){ .ex-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:960px){ .ex-grid{grid-template-columns:repeat(4,1fr);} }
+  .ex-card{
+    display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-lg); overflow:hidden; text-align:left; box-shadow:var(--shadow); padding:0;
+  }
+  .ex-card:hover{border-color:var(--accent);}
+  .ex-thumb{position:relative; aspect-ratio:1/1; background:var(--surface-2); overflow:hidden;}
+  .ex-thumb img{width:100%; height:100%; object-fit:contain; display:block; padding:6px;}
+  .ex-body{padding:10px 12px 12px;}
+  .ex-name{font-weight:700; font-size:13.5px; margin-bottom:6px; line-height:1.25;}
+  .ex-tags{display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:8px;}
+  .tag{font-size:10px; font-weight:600; color:var(--text-faint); text-transform:uppercase; letter-spacing:.04em;}
+  .dot{width:3px;height:3px;border-radius:50%;background:var(--text-faint);}
+  .ratings{display:flex; flex-direction:column; gap:3px;}
+  .rate-line{display:flex; align-items:center; gap:5px;}
+  .rate-label{font-size:9px; color:var(--text-faint); font-weight:700; width:30px; text-align:left; text-transform:uppercase; letter-spacing:.04em;}
+  .stars{display:flex; gap:1px;}
+  .stars svg{width:10px; height:10px;}
+  .star-filled{fill:var(--gold); stroke:var(--gold);}
+  .star-empty{fill:none; stroke:var(--border); stroke-width:1.5;}
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(8,9,12,0.55); backdrop-filter:blur(3px);
+    display:none; align-items:flex-end; justify-content:center; z-index:100;
+  }
+  .modal-backdrop.show{display:flex; animation:fadein .2s ease;}
+  @media (min-width:720px){ .modal-backdrop{align-items:center;} }
+  .modal{
+    background:var(--bg-elevated); width:100%; max-width:600px; max-height:88vh; overflow-y:auto;
+    border-radius:24px 24px 0 0; padding:22px 22px 34px; position:relative;
+    border:1px solid var(--border); border-bottom:none;
+  }
+  @media (min-width:720px){ .modal{border-radius:24px; border-bottom:1px solid var(--border); max-height:80vh;} }
+  .modal-handle{width:36px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 16px;}
+  @media (min-width:720px){ .modal-handle{display:none;} }
+  .modal-close{
+    position:absolute; top:18px; right:18px; width:32px; height:32px; border-radius:50%;
+    background:var(--surface-2); border:none; color:var(--text-dim); display:flex; align-items:center; justify-content:center;
+  }
+  .modal-close svg{width:15px;height:15px;}
+  .modal-head{display:flex; gap:14px; align-items:flex-start; margin-bottom:16px; padding-right:36px;}
+  .modal-icon{
+    width:56px; height:56px; border-radius:14px; background:#FFFFFF;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;
+  }
+  .modal-icon img{width:100%; height:100%; object-fit:contain; padding:8px;}
+  .modal-head h2{font-size:20px; margin:0 0 4px;}
+  .modal-tags{display:flex; gap:6px; flex-wrap:wrap; font-size:11.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.04em; font-weight:600;}
+
+  @media (max-width:640px){
+    .modal-head{
+      flex-direction:column; align-items:center; text-align:center;
+      padding-right:0; gap:12px;
+    }
+    .modal-icon{
+      width:100%; max-width:260px; height:auto; aspect-ratio:1/1;
+      border-radius:var(--radius-lg);
+    }
+    .modal-head h2{font-size:21px;}
+    .modal-tags{justify-content:center;}
+  }
+
+  .rating-cards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;}
+  .rating-card{background:var(--surface-2); border-radius:var(--radius-sm); padding:12px; border:1px solid var(--border);}
+  .rating-card .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); font-weight:700; margin-bottom:6px;}
+  .rating-card .stars svg{width:15px;height:15px;}
+
+  .goal-badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; padding:6px 12px;
+    border-radius:999px; margin-bottom:16px;
+  }
+  .goal-strength{background:var(--accent2-soft); color:var(--accent-2);}
+  .goal-size{background:var(--accent-soft); color:var(--accent);}
+  .goal-both{background:linear-gradient(90deg,var(--accent2-soft),var(--accent-soft)); color:var(--text);}
+
+  .modal p.desc{font-size:14px; line-height:1.6; color:var(--text-dim); margin:0 0 20px;}
+  .modal h4{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint); margin:0 0 10px; font-weight:700;}
+  .steps{list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .steps li{display:flex; gap:10px; font-size:14px; line-height:1.5; color:var(--text);}
+  .step-num{
+    width:22px; height:22px; border-radius:7px; background:var(--surface-2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;
+    font-family:'JetBrains Mono',monospace; color:var(--text-dim); margin-top:1px;
+  }
+  .scheme-box{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px;
+  }
+  .scheme-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;}
+  .scheme-item .k{font-size:10px; text-transform:uppercase; color:var(--text-faint); font-weight:700; letter-spacing:.05em;}
+  .scheme-item .v{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:14.5px; margin-top:2px;}
+  .scheme-note{font-size:13px; color:var(--text-dim); line-height:1.5; margin:0; padding-top:8px; border-top:1px solid var(--border);}
+
+  footer{text-align:center; padding:30px 20px 10px; color:var(--text-faint); font-size:12px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h2M18 12h2M6 9v6M18 9v6M8 12h8"/></svg>
+      </div>
+      <div class="brand-name">Load<span>out</span></div>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <button data-mode="light" aria-label="Light mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button data-mode="system" aria-label="System"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+      <button data-mode="dark" aria-label="Dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+  </header>
+
+  <!-- HOME VIEW -->
+  <main class="view active" id="view-home">
+    <button class="back-btn"></button>
+    <section class="hero">
+      <span class="eyebrow">Exercise Library</span>
+      <h1>Pick a muscle.<br>Get the best moves.</h1>
+      <p>Every exercise is rated 1–5 for building raw strength and 1–5 for building size, so you know exactly what to load up and how hard to push it.</p>
+    </section>
+
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="globalSearch" class="search-input" placeholder="Search exercises or muscle groups…" autocomplete="off">
+      <button class="search-clear" id="searchClear" aria-label="Clear search" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="section-label"><h2>Muscle Groups</h2></div>
+    <div class="muscle-grid" id="muscleGrid"></div>
+    <footer>Tap a muscle group to see ranked exercises, or let Loadout auto-pick a session for you.</footer>
+  </main>
+
+  <!-- GROUP VIEW -->
+  <main class="view" id="view-group">
+    <button class="back-btn" id="backBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      All muscle groups
+    </button>
+
+    <div class="group-hero">
+      <div class="group-figure" id="groupFigure"></div>
+      <div class="group-title">
+        <h1 id="groupName"></h1>
+        <p id="groupSub"></p>
+      </div>
+    </div>
+
+    <div class="autopick">
+      <div class="autopick-top">
+        <div>
+          <h3>Auto-pick my workout</h3>
+          <p>Builds a balanced session from the highest-rated strength &amp; size exercises for this muscle.</p>
+        </div>
+        <button class="autopick-btn" id="autoPickBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          Build it
+        </button>
+      </div>
+      <div class="autopick-result" id="autoPickResult"></div>
+    </div>
+
+    <div class="filter-row" id="filterRow"></div>
+    <div class="ex-grid" id="exList"></div>
+  </main>
+
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="modalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============ ICONS ============ */
+const ICONS = {
+  barbell: `<path d="M4 12h16M6 8v8M4 9v6M18 8v8M20 9v6"/>`,
+  dumbbell: `<path d="M6 9v6M9 12h6M4 10v4M18 10v4"/><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/>`,
+  cable: `<path d="M6 4v4a4 4 0 0 0 4 4h4a4 4 0 0 1 4 4v4"/><circle cx="6" cy="4" r="2"/><circle cx="18" cy="20" r="2"/>`,
+  machine: `<rect x="4" y="4" width="16" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>`,
+  bodyweight: `<circle cx="12" cy="5" r="2.4"/><path d="M12 8v7M8 11l4-3 4 3M8 20l4-5 4 5"/>`,
+  wheel: `<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/>`
+};
+function iconSvg(key, cls){ return `<svg class="${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[key]||ICONS.dumbbell}</svg>`; }
+
+/* ============ IMAGES ============
+   All artwork now comes from real PNG files in a categorized folder
+   structure that you provide, instead of generated diagrams:
+
+     images/muscles/{muscleId}.png             e.g. images/muscles/chest.png
+     images/{muscleId}/{exercise-slug}.png      e.g. images/chest/barbell-bench-press.png
+
+   The exercise slug is just the exercise name, lowercased, with
+   spaces/punctuation turned into dashes (see slug() below).
+*/
+const IMG_BASE = 'images';
+function slug(str){
+  return str.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+}
+function muscleImg(m){ return `${IMG_BASE}/muscles/${m.id}.PNG`; }
+function exerciseImg(muscleId, ex){ return `${IMG_BASE}/${muscleId}/${slug(ex.name)}.png`; }
+function exerciseGif(muscleId, ex){ return `${IMG_BASE}/${muscleId}/${slug(ex.name)}.gif`; }
+
+/* ============ DATA ============ */
+const MUSCLES = [
+  { id:'chest', name:'Chest', side:'front', pos:{t:32,l:50,w:46,h:20},
+    blurb:'Pressing power for a bigger, thicker chest.',
+    exercises:[
+      {name:'Barbell Bench Press', equip:'barbell', strength:5, size:4, goal:'both', reps:'3–6 reps', rest:'3–5 min',
+        desc:'The benchmark upper-body strength lift. A flat barbell press that lets you move the most total weight through the chest, front delts and triceps.',
+        steps:['Lie on the bench, feet flat, shoulder blades pulled together and down.','Grip the bar just wider than shoulder-width, unrack, and lower it to your lower chest with control.','Press back up in a slight arc until your arms are fully extended.'],
+        note:'Because it lets you overload the most weight, treat this as your main strength movement — build up in low reps with long rest, then use it heavier as your other chest lifts get you tired.'},
+      {name:'Incline Barbell Press', equip:'barbell', strength:4, size:4, goal:'both', reps:'5–8 reps', rest:'2.5–4 min',
+        desc:'A 30–45° incline shifts more work onto the upper chest and front delts while still allowing heavy loading.',
+        steps:['Set the bench to a 30–45° incline.','Unrack the bar over your upper chest and lower it to just below your collarbone.','Drive up and slightly back until arms are locked out.'],
+        note:'Strong secondary strength builder — rotate it in as your second heavy chest movement.'},
+      {name:'Incline Dumbbell Press', equip:'dumbbell', strength:3, size:5, goal:'size', reps:'8–12 reps', rest:'90–120s',
+        desc:'Independent arm paths give a deeper stretch at the bottom and let each side work evenly — excellent for hypertrophy.',
+        steps:['Set an incline bench to 30°, dumbbells resting on your thighs.','Kick them up to shoulder level as you lie back.','Press up and slightly inward, then lower slowly until you feel a deep chest stretch.'],
+        note:'The extra range of motion makes this one of the best pure size builders for the upper chest — keep reps moderate-high and focus on the stretch.'},
+      {name:'Weighted Dips', equip:'bodyweight', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'A compound bodyweight-plus-load push that hammers the lower chest and triceps hard.',
+        steps:['Support yourself on parallel bars, torso leaning forward slightly.','Lower under control until you feel a stretch in the chest, elbows flaring out a little.','Press back up to full lockout.'],
+        note:'Lean forward to bias chest over triceps. Add weight via a belt once bodyweight reps get easy.'},
+      {name:'Cable Fly (Mid)', equip:'cable', strength:2, size:5, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'Pure isolation with constant tension throughout the whole range — great finisher for chest size.',
+        steps:['Stand centered between two cable stacks set to shoulder height.','With a slight elbow bend, bring the handles together in front of your chest.','Squeeze at the center, then return slowly to a deep stretch.'],
+        note:'Cables keep tension on at both the stretch and the squeeze — use higher reps and focus purely on the muscle, not the weight on the stack.'},
+      {name:'Machine Chest Press', equip:'machine', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'A guided path that lets you push close to failure safely, without needing a spotter.',
+        steps:['Adjust the seat so handles line up with mid-chest.','Press forward until arms are extended without locking out hard.','Return slowly to the start position.'],
+        note:'Good for pushing extra close to failure at the end of a session since it\'s self-spotting.'},
+      {name:'Push-Up', equip:'bodyweight', strength:2, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'A no-equipment staple that builds chest endurance and is easy to scale anywhere.',
+        steps:['Hands slightly wider than shoulders, body in a straight line.','Lower your chest to just above the floor.','Push back up to full arm extension.'],
+        note:'Great warm-up or high-rep finisher; add a weight plate on your back to keep it challenging as you get stronger.'}
+    ]},
+  { id:'back', name:'Back', side:'back', pos:{t:30,l:50,w:56,h:26},
+    blurb:'Width and thickness from pulling movements.',
+    exercises:[
+      {name:'Deadlift', equip:'barbell', strength:5, size:4, goal:'strength', reps:'1–5 reps', rest:'3–5 min',
+        desc:'The ultimate posterior-chain strength builder, loading the entire back, glutes and hamstrings in one lift.',
+        steps:['Stand with feet hip-width, bar over mid-foot, and grip just outside your legs.','Brace your core, flatten your back, and drive through the floor to stand up.','Lock out tall, then lower the bar back down under control.'],
+        note:'Best trained heavy with very low reps and long rest — this is a maximal-strength lift more than a size builder.'},
+      {name:'Weighted Pull-Up', equip:'bodyweight', strength:5, size:5, goal:'both', reps:'5–10 reps', rest:'2.5–4 min',
+        desc:'Widely regarded as the single best lat builder — trains width and strength at once.',
+        steps:['Hang from a bar with an overhand grip, slightly wider than shoulders.','Pull your chest toward the bar, driving elbows down and back.','Lower under control to a full hang.'],
+        note:'Excellent for both goals — start with bodyweight for higher reps, add a weight belt once you can do 10+ clean reps.'},
+      {name:'Barbell Row', equip:'barbell', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'A heavy horizontal pull that builds back thickness and grip strength.',
+        steps:['Hinge at the hips with a flat back, bar hanging below your shoulders.','Pull the bar to your lower ribs, squeezing your shoulder blades together.','Lower with control without losing your hip hinge.'],
+        note:'Keep the torso angle consistent rep to rep — this is a big compound strength-and-size lift.'},
+      {name:'Lat Pulldown', equip:'machine', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'A machine-guided vertical pull, ideal for building toward a first pull-up or adding extra lat volume.',
+        steps:['Sit and secure your thighs under the pad, grip the bar wide.','Pull the bar down to your upper chest, driving elbows down.','Let it rise back under control to a full stretch.'],
+        note:'Great for adjustable, precise loading — use it to chase a pump after heavier pulls.'},
+      {name:'Seated Cable Row', equip:'cable', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s',
+        desc:'Targets mid-back thickness with a strong squeeze at the finish.',
+        steps:['Sit with knees slightly bent, grip the handle, back straight.','Pull to your torso, squeezing shoulder blades together.','Extend arms forward with control, chest tall.'],
+        note:'Avoid rounding your lower back at the stretch — keep tension on the lats and mid-back.'},
+      {name:'Single-Arm DB Row', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s',
+        desc:'One-sided loading that lets you focus on each side\'s lat and fixes imbalances.',
+        steps:['Place one knee and hand on a bench, back flat.','Row the dumbbell to your hip, elbow close to your body.','Lower fully under control before the next rep.'],
+        note:'Because you can brace with the free arm, this is a good spot to push reps and really feel the lat.'},
+      {name:'Straight-Arm Pulldown', equip:'cable', strength:1, size:3, goal:'size', reps:'12–15 reps', rest:'60s',
+        desc:'An isolation move that hits the lats without involving the arms much at all.',
+        steps:['Stand facing a high cable, arms straight, slight forward lean.','Pull the bar down to your thighs, keeping elbows nearly locked.','Let it rise back to shoulder height under control.'],
+        note:'Use light-moderate weight and go for a strong stretch and squeeze rather than chasing heavy loads.'}
+    ]},
+  { id:'shoulders', name:'Shoulders', side:'front', pos:{t:16,l:24,w:20,h:14},
+    blurb:'Rounder, more capped delts, front to back.',
+    exercises:[
+      {name:'Overhead Barbell Press', equip:'barbell', strength:5, size:4, goal:'strength', reps:'3–6 reps', rest:'3–4 min',
+        desc:'The premier shoulder strength lift, also recruiting the triceps and upper chest.',
+        steps:['Stand with the bar racked at shoulder height, grip just outside shoulders.','Brace your core and press the bar overhead until arms lock out.','Lower back to the shoulders with control.'],
+        note:'Train this heavy with low reps as your primary shoulder strength movement.'},
+      {name:'Seated DB Shoulder Press', equip:'dumbbell', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'Independent dumbbell pressing that builds strong, well-rounded delts with a back-supported seat.',
+        steps:['Sit with back support, dumbbells at shoulder height, palms forward.','Press overhead until arms are extended without locking hard.','Lower back to shoulder level under control.'],
+        note:'A great all-round builder that\'s slightly easier on the shoulders than standing barbell pressing.'},
+      {name:'Lateral Raise', equip:'dumbbell', strength:1, size:5, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'The single best isolation move for width — targets the side delt directly.',
+        steps:['Stand holding light dumbbells at your sides, slight bend in the elbows.','Raise your arms out to the sides until roughly shoulder height.','Lower slowly under control.'],
+        note:'Go light and high-rep here — this move is about feel and time under tension, not the weight used.'},
+      {name:'Cable Lateral Raise', equip:'cable', strength:1, size:5, goal:'size', reps:'12–15 reps', rest:'45–60s',
+        desc:'Keeps constant tension on the side delt through the whole range, unlike dumbbells.',
+        steps:['Stand side-on to a low pulley, handle in the far hand.','Raise your arm out to the side to shoulder height.','Lower with control, resisting the cable\'s pull.'],
+        note:'The constant tension makes this a strong finisher for stubborn side-delt growth.'},
+      {name:'Rear Delt Fly', equip:'dumbbell', strength:1, size:4, goal:'size', reps:'12–15 reps', rest:'45–60s',
+        desc:'Isolates the rear delts, which are easy to under-train and important for shoulder health and a 3D look.',
+        steps:['Hinge forward at the hips, dumbbells hanging below your shoulders.','Raise your arms out to the sides, squeezing your shoulder blades.','Lower slowly back to the start.'],
+        note:'Use light weight and focus on squeezing the rear delts rather than swinging the weight up.'},
+      {name:'Face Pull', equip:'cable', strength:1, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'Builds rear delts and rotator cuff health while pulling the shoulders into better posture.',
+        steps:['Set a rope attachment at upper-chest height on a cable.','Pull toward your face, splitting the rope apart, elbows high.','Return slowly under control.'],
+        note:'Cheap insurance for shoulder joint health — worth including even on a light day.'},
+      {name:'Arnold Press', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'A rotational press that works the delts through a bigger range than a standard press.',
+        steps:['Start with dumbbells at shoulder height, palms facing you.','Press up while rotating palms to face forward at the top.','Reverse the rotation as you lower back down.'],
+        note:'The rotation adds extra time under tension across all three delt heads.'}
+    ]},
+  { id:'biceps', name:'Biceps', side:'front', pos:{t:22,l:16,w:16,h:16},
+    blurb:'Peak and thickness through the front of the arm.',
+    exercises:[
+      {name:'Barbell Curl', equip:'barbell', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'90s–2 min',
+        desc:'The classic mass-builder for biceps, letting you load the most total weight.',
+        steps:['Stand holding a barbell with an underhand, shoulder-width grip.','Curl the bar up, keeping elbows pinned to your sides.','Lower with control to full arm extension.'],
+        note:'Your go-to for heavier, lower-rep bicep work since it allows the most loading.'},
+      {name:'Dumbbell Curl', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'75–90s',
+        desc:'Lets each arm work independently and rotate the wrist for a fuller contraction.',
+        steps:['Stand or sit holding dumbbells at your sides, palms forward.','Curl up while keeping elbows still, optionally rotating the wrist out.','Lower slowly under control.'],
+        note:'Easy to fix left/right imbalances since each arm works on its own.'},
+      {name:'Preacher Curl', equip:'machine', strength:2, size:5, goal:'size', reps:'8–12 reps', rest:'75–90s',
+        desc:'The angled pad removes momentum entirely, isolating the biceps for maximum growth stimulus.',
+        steps:['Rest your upper arms on the preacher pad, grip an EZ-bar or handle.','Curl up under strict control, no swinging.','Lower slowly to a deep stretch at the bottom.'],
+        note:'Because cheating is nearly impossible here, this is one of the purest size-focused bicep moves.'},
+      {name:'Hammer Curl', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'75–90s',
+        desc:'A neutral grip that shifts emphasis onto the brachialis, adding arm thickness.',
+        steps:['Hold dumbbells with palms facing each other.','Curl straight up, keeping wrists neutral.','Lower under control.'],
+        note:'Builds the underlying brachialis muscle, which pushes the biceps up for a thicker-looking arm.'},
+      {name:'Cable Curl', equip:'cable', strength:2, size:4, goal:'size', reps:'10–15 reps', rest:'60–75s',
+        desc:'Constant cable tension keeps the biceps working even at the top and bottom of the rep.',
+        steps:['Stand facing a low pulley with a straight or EZ bar attachment.','Curl up, keeping elbows fixed at your sides.','Lower slowly, resisting the cable the whole way.'],
+        note:'Good finisher move — the tension never fully releases, which drives a strong pump.'},
+      {name:'Concentration Curl', equip:'dumbbell', strength:1, size:4, goal:'size', reps:'10–15 reps', rest:'60s',
+        desc:'A seated, braced curl that isolates one bicep at a time for peak contraction.',
+        steps:['Sit, elbow braced against your inner thigh, dumbbell hanging down.','Curl up slowly, squeezing hard at the top.','Lower under full control.'],
+        note:'Best used at the end of an arm session to finish each bicep off with total focus.'}
+    ]},
+  { id:'triceps', name:'Triceps', side:'back', pos:{t:24,l:84,w:16,h:16},
+    blurb:'Build the mass on the back of the arm.',
+    exercises:[
+      {name:'Close-Grip Bench Press', equip:'barbell', strength:5, size:4, goal:'strength', reps:'5–8 reps', rest:'2.5–4 min',
+        desc:'A compound press with a narrow grip that shifts the load heavily onto the triceps.',
+        steps:['Lie on a flat bench, hands just inside shoulder-width on the bar.','Lower the bar to your lower chest, elbows tucked close.','Press back up to lockout, squeezing the triceps.'],
+        note:'The best triceps strength builder — treat it like a pressing lift and go heavy with low reps.'},
+      {name:'Weighted Dips', equip:'bodyweight', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'Staying more upright than a chest dip shifts more of the work onto the triceps.',
+        steps:['Support yourself on parallel bars, torso kept upright.','Lower with elbows tracking back, not flared out.','Press back up to full lockout.'],
+        note:'A more upright torso than the chest version keeps this triceps-dominant.'},
+      {name:'Overhead Cable Extension', equip:'cable', strength:2, size:5, goal:'size', reps:'10–15 reps', rest:'75–90s',
+        desc:'Stretches the long head of the triceps at the bottom, which is hard to hit with pushdowns alone.',
+        steps:['Face away from a low pulley, rope overhead, elbows pointed forward.','Extend your arms until straight, keeping elbows fixed.','Lower slowly for a deep stretch behind your head.'],
+        note:'Uniquely good at hitting the long head thanks to the overhead stretch — pairs well with pushdowns.'},
+      {name:'Rope Pushdown', equip:'cable', strength:2, size:4, goal:'size', reps:'10–15 reps', rest:'60–75s',
+        desc:'A classic isolation finisher that lets you split the rope apart for an extra squeeze.',
+        steps:['Stand facing a high pulley with a rope attachment, elbows at your sides.','Push down until arms are fully extended, splitting the rope at the bottom.','Return slowly under control.'],
+        note:'Keep the elbows pinned — letting them drift forward turns this into more of a chest move.'},
+      {name:'Skull Crushers', equip:'barbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'Lying extensions that let you load meaningful weight through a long triceps stretch.',
+        steps:['Lie on a bench holding an EZ-bar above your chest, arms extended.','Bend at the elbows, lowering the bar toward your forehead.','Extend back up without moving your upper arms.'],
+        note:'Keep upper arms still throughout — the movement should come entirely from the elbow.'},
+      {name:'Single-Arm DB Extension', equip:'dumbbell', strength:1, size:3, goal:'size', reps:'10–15 reps', rest:'60s',
+        desc:'A light isolation move that\'s easy to feel and good for fixing imbalances.',
+        steps:['Hold a dumbbell overhead in one hand, elbow pointed up.','Lower it behind your head under control.','Extend back to the top, squeezing the triceps.'],
+        note:'Great high-rep finisher to burn out the triceps at the end of an arm day.'}
+    ]},
+    { id:'forearms', name:'Forearms', side:'front', pos:{t:38,l:14,w:14,h:16},
+    blurb:'Grip strength and lower-arm size.',
+    exercises:[
+      {name:'Farmer\'s Carry', equip:'dumbbell', strength:5, size:3, goal:'strength', reps:'30–45s walk', rest:'90s–2 min',
+        desc:'A heavy carry that builds crushing grip strength along with total-body stability.',
+        steps:['Pick up a heavy dumbbell or kettlebell in each hand.','Stand tall and walk for the given distance or time.','Set down under control once grip starts to fail.'],
+        note:'Go as heavy as you can hold with good posture — grip strength here transfers directly to every other lift.'},
+      {name:'Barbell Wrist Curl', equip:'barbell', strength:2, size:4, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'A direct isolation move for the forearm flexors on the underside of the arm.',
+        steps:['Sit with your forearms resting on your thighs, palms up, bar in hand.','Curl your wrists up as far as possible.','Lower slowly for a full stretch.'],
+        note:'Keep the reps slow and controlled — forearms respond well to a strong stretch and squeeze.'},
+      {name:'Reverse Wrist Curl', equip:'barbell', strength:1, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'Targets the extensors on top of the forearm, important for balance and elbow health.',
+        steps:['Sit with forearms on your thighs, palms down, bar in hand.','Curl your wrists up as high as you can.','Lower slowly to a full stretch.'],
+        note:'Often neglected, but pairing this with regular wrist curls builds more complete, balanced forearms.'},
+      {name:'Dead Hang', equip:'bodyweight', strength:3, size:2, goal:'strength', reps:'20–45s hold', rest:'60–90s',
+        desc:'A simple hang that builds grip endurance and helps decompress the shoulders.',
+        steps:['Hang from a pull-up bar with straight arms, shoulders relaxed.','Hold the position, keeping your grip firm.','Drop down once your grip starts to give out.'],
+        note:'A great low-fatigue way to add grip work at the start or end of any session.'},
+      {name:'Cable Reverse Curl', equip:'cable', strength:2, size:4, goal:'size', reps:'10–15 reps', rest:'60–75s',
+        desc:'An overhand-grip curl that builds the brachioradialis and upper forearm.',
+        steps:['Stand facing a low pulley with a straight bar, palms facing down.','Curl up keeping elbows fixed at your sides.','Lower slowly under control.'],
+        note:'The thicker-looking forearm muscle sits right under this movement — keep the grip firm throughout.'},
+      {name:'Plate Pinch Hold', equip:'bodyweight', strength:2, size:2, goal:'strength', reps:'20–30s hold', rest:'60–75s',
+        desc:'A pinch-grip hold using two weight plates, building a different style of grip strength.',
+        steps:['Pinch two plates together, smooth sides out, one in each hand.','Hold them at your sides, staying tall.','Set down once grip starts to fail.'],
+        note:'Pinch grip is a different skill than crushing grip — worth training separately for well-rounded forearms.'}
+    ]},
+  { id:'abs', name:'Abs', side:'front', pos:{t:47,l:50,w:26,h:18},
+    blurb:'A stronger, more visible midsection.',
+    exercises:[
+      {name:'Hanging Leg Raise', equip:'bodyweight', strength:2, size:4, goal:'size', reps:'8–15 reps', rest:'60–75s',
+        desc:'A demanding bodyweight move that hits the lower abs and hip flexors hard.',
+        steps:['Hang from a bar with straight arms.','Raise your legs up toward your chest, curling your pelvis.','Lower slowly under control without swinging.'],
+        note:'Bend the knees if straight-leg reps are too hard — control matters more than range here.'},
+      {name:'Cable Crunch', equip:'cable', strength:2, size:5, goal:'size', reps:'10–15 reps', rest:'60–75s',
+        desc:'Lets you add external load to a crunch, which is key for actually growing the abs.',
+        steps:['Kneel below a high pulley with a rope, hands by your head.','Crunch down, bringing elbows toward your knees.','Return slowly to the start, keeping tension on.'],
+        note:'Because you can add real weight here, this is one of the best moves for ab size, not just endurance.'},
+      {name:'Ab Wheel Rollout', equip:'wheel', strength:3, size:4, goal:'both', reps:'6–12 reps', rest:'75–90s',
+        desc:'A tough anti-extension move that builds serious core strength and stability.',
+        steps:['Kneel holding the wheel, core braced.','Roll forward slowly, keeping your back flat, as far as you can control.','Roll back to the start, driving through your abs.'],
+        note:'Stop the rollout before your lower back arches — depth should build gradually over weeks.'},
+      {name:'Plank', equip:'bodyweight', strength:1, size:2, goal:'strength', reps:'30–60s hold', rest:'45–60s',
+        desc:'An isometric hold that builds core stability and endurance rather than visible size.',
+        steps:['Support yourself on forearms and toes, body in a straight line.','Brace your abs and glutes, avoiding a sagging hips.','Hold for time.'],
+        note:'Great for building the stability that supports every other lift, but not a strong muscle-size tool on its own.'},
+      {name:'Weighted Sit-Up', equip:'bodyweight', strength:3, size:3, goal:'both', reps:'10–15 reps', rest:'60–75s',
+        desc:'A full range-of-motion crunch with added load for extra resistance.',
+        steps:['Lie on your back, knees bent, holding a plate on your chest.','Curl up to a full sitting position.','Lower back down under control.'],
+        note:'Adding a light plate turns a bodyweight endurance move into a real strength-and-size builder.'},
+      {name:'Russian Twist', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'12–20 reps/side', rest:'45–60s',
+        desc:'A rotational move that targets the obliques for a more complete core.',
+        steps:['Sit with knees bent, leaning back slightly, feet lifted or grounded.','Rotate a weight from side to side, touching the floor each side.','Keep your core braced throughout.'],
+        note:'Add a light plate or dumbbell once bodyweight reps feel easy.'}
+    ]},
+
+    { id:'quadriceps', name:'Quadriceps', side:'front', pos:{t:64,l:50,w:34,h:16},
+    blurb:'Front-of-thigh size and squatting power.',
+    exercises:[
+      {name:'Barbell Back Squat', equip:'barbell', strength:5, size:5, goal:'both', reps:'4–8 reps', rest:'3–5 min',
+        desc:'The king of leg exercises — a full-body compound that builds serious quad strength and size.',
+        steps:['Set the bar across your upper back, feet shoulder-width.','Sit down and back, keeping your chest up, until thighs are at least parallel.','Drive through your feet to stand back up.'],
+        note:'Your main quad lift — go heavy for strength phases, then add sets in the 8-12 range for size blocks.'},
+      {name:'Front Squat', equip:'barbell', strength:4, size:4, goal:'both', reps:'5–8 reps', rest:'2.5–4 min',
+        desc:'The front-loaded bar position keeps you upright and shifts more emphasis onto the quads.',
+        steps:['Rest the bar across your front shoulders, elbows high.','Squat down keeping your torso upright.','Drive back up to standing.'],
+        note:'More quad-dominant than a back squat, but more demanding on mobility — build up gradually.'},
+      {name:'Leg Press', equip:'machine', strength:4, size:4, goal:'both', reps:'8–12 reps', rest:'2–3 min',
+        desc:'Lets you load the quads heavily with less demand on balance and lower-back stability.',
+        steps:['Sit in the machine, feet shoulder-width on the platform.','Lower the platform until knees reach about 90°.','Press back up without locking your knees hard.'],
+        note:'A great option when you want quad overload without the technical demands of a free squat.'},
+      {name:'Hack Squat', equip:'machine', strength:4, size:5, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'A machine squat variation that lets you push quads hard with a fixed, stable path.',
+        steps:['Position your shoulders and back against the pads, feet on the platform.','Lower until your thighs are at least parallel.','Press back up through your heels.'],
+        note:'The fixed path lets you focus entirely on pushing the quads without worrying about balance.'},
+      {name:'Leg Extension', equip:'machine', strength:1, size:5, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'Pure quad isolation with no other muscles involved — excellent for direct size work.',
+        steps:['Sit with the pad resting on your shins, knees at 90°.','Extend your legs until straight, squeezing the quads.','Lower slowly under control.'],
+        note:'Use this to finish off quads after compound lifts — the isolation drives a strong, direct pump.'},
+      {name:'DB Walking Lunge', equip:'dumbbell', strength:2, size:4, goal:'size', reps:'10–12 reps/leg', rest:'75–90s',
+        desc:'A unilateral move that builds quad size while also challenging balance and stability.',
+        steps:['Hold dumbbells at your sides, step forward into a lunge.','Lower until your back knee nearly touches the floor.','Push through the front foot to step into the next lunge.'],
+        note:'Great for fixing imbalances between legs since each side works independently.'}
+    ]},
+
+  { id:'hamstrings', name:'Hamstrings', side:'back', pos:{t:64,l:50,w:34,h:16},
+    blurb:'Back-of-thigh strength and hip-hinge power.',
+    exercises:[
+      {name:'Romanian Deadlift', equip:'barbell', strength:5, size:4, goal:'both', reps:'6–10 reps', rest:'2.5–4 min',
+        desc:'A hip-hinge movement that heavily loads the hamstrings through a long stretch.',
+        steps:['Hold a bar at hip height, soft knees.','Hinge at the hips, pushing them back as the bar slides down your legs.','Reverse the motion, driving hips forward to stand tall.'],
+        note:'The deep stretch under load makes this one of the best hamstring builders for strength and size alike.'},
+      {name:'Nordic Curl', equip:'bodyweight', strength:3, size:4, goal:'both', reps:'5–8 reps', rest:'90s–2 min',
+        desc:'A tough eccentric-focused bodyweight move known for building serious hamstring strength.',
+        steps:['Kneel with your ankles anchored, torso upright.','Lower your torso forward as slowly as possible, resisting with your hamstrings.','Catch yourself and push back up, or lower fully with control.'],
+        note:'Extremely effective but hard — start with a partial range and build up over weeks.'},
+      {name:'Good Morning', equip:'barbell', strength:4, size:3, goal:'strength', reps:'6–10 reps', rest:'2–3 min',
+        desc:'A hip-hinge with the bar on your back, building hamstring and lower-back strength.',
+        steps:['Rest a bar across your upper back, soft knees.','Hinge forward at the hips until your torso is roughly parallel to the floor.','Drive your hips forward to return to standing.'],
+        note:'Start light — this move rewards strict form far more than heavy loading.'},
+      {name:'Stiff-Leg DB Deadlift', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'A dumbbell hinge that\'s easy to set up anywhere and still gives a strong hamstring stretch.',
+        steps:['Hold dumbbells in front of your thighs, knees soft.','Hinge at the hips, lowering the weights along your legs.','Drive your hips forward to stand back up.'],
+        note:'A convenient, accessible option when a barbell platform isn\'t free.'},
+      {name:'Lying Leg Curl', equip:'machine', strength:1, size:5, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'Pure hamstring isolation, curling the leg with no help from other muscles.',
+        steps:['Lie face down, pad resting just above your heels.','Curl your legs up toward your glutes.','Lower slowly under control.'],
+        note:'A direct isolation finisher — great for adding hamstring size after heavier hinge movements.'},
+      {name:'Seated Leg Curl', equip:'machine', strength:1, size:5, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'A seated variation that stretches the hamstrings a little differently than the lying version.',
+        steps:['Sit with the pad against the back of your ankles, knees at the pivot.','Curl your legs down and back.','Return slowly to the start.'],
+        note:'Alternating this with lying curls over time can help target the hamstrings from slightly different angles.'}
+    ]},
+
+  { id:'hips', name:'Hips & Glutes', side:'back', pos:{t:52,l:50,w:30,h:12},
+    blurb:'Glute strength and size for power and a stronger backside.',
+    exercises:[
+      {name:'Barbell Hip Thrust', equip:'barbell', strength:5, size:5, goal:'both', reps:'6–10 reps', rest:'2.5–4 min',
+        desc:'The single best glute-specific loading movement — lets you put maximum tension directly on the glutes.',
+        steps:['Set your upper back against a bench, bar rolled over your hips.','Drive your hips up until your torso is flat, squeezing the glutes hard.','Lower under control without resting the weight on the floor.'],
+        note:'Treat this as your primary glute lift — pause and squeeze hard at the top of every rep.'},
+      {name:'Sumo Deadlift', equip:'barbell', strength:5, size:4, goal:'strength', reps:'3–6 reps', rest:'3–5 min',
+        desc:'A wide-stance pull that shifts more load onto the glutes and inner thighs than a conventional deadlift.',
+        steps:['Stand with a wide stance, toes out, gripping inside your knees.','Drive through the floor, keeping your chest up, to stand tall.','Lower back down under control.'],
+        note:'Great heavy strength builder for the glutes and hips when trained in low reps.'},
+      {name:'Bulgarian Split Squat', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps/leg', rest:'90s–2 min',
+        desc:'A single-leg squat that hammers the glutes hard while also challenging balance and stability.',
+        steps:['Rest your rear foot on a bench behind you, dumbbells at your sides.','Lower straight down until your front thigh is near parallel.','Drive through your front heel to stand back up.'],
+        note:'The rear-foot-elevated position biases the glute hard — go deep and control the descent.'},
+      {name:'Cable Glute Kickback', equip:'cable', strength:1, size:4, goal:'size', reps:'12–15 reps/leg', rest:'45–60s',
+        desc:'An isolation move with constant tension that lets you really feel and squeeze the glute.',
+        steps:['Attach an ankle cuff to a low cable, facing the machine.','Kick your leg back and up, squeezing the glute at the top.','Return slowly under control.'],
+        note:'Go light and focus purely on the squeeze — this is about mind-muscle connection, not load.'},
+      {name:'Machine Hip Abduction', equip:'machine', strength:1, size:4, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'Targets the glute medius on the side of the hip, important for both size and hip stability.',
+        steps:['Sit in the machine with pads against the outside of your knees.','Push your knees apart against the resistance.','Return slowly under control.'],
+        note:'A frequently skipped move that builds hip width and helps protect the knees under heavy squatting.'},
+      {name:'Glute Bridge March', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'10–15 reps/leg', rest:'45–60s',
+        desc:'A bodyweight glute activator that also challenges core and hip stability.',
+        steps:['Lie on your back, knees bent, hips raised in a bridge position.','Lift one foot off the floor, holding the bridge steady.','Alternate legs while keeping your hips level throughout.'],
+        note:'Great warm-up move to activate the glutes before heavier hip work.'}
+    ]},
+
+  { id:'calves', name:'Calves', side:'back', pos:{t:86,l:50,w:24,h:14},
+    blurb:'Lower-leg size and power.',
+    exercises:[
+      {name:'Standing Calf Raise', equip:'machine', strength:3, size:4, goal:'both', reps:'8–15 reps', rest:'60–90s',
+        desc:'A straight-knee raise that targets the larger gastrocnemius muscle.',
+        steps:['Stand with the balls of your feet on the platform, shoulders under the pads.','Lower your heels for a deep stretch.','Rise up onto your toes as high as possible, squeezing at the top.'],
+        note:'Calves respond well to a full stretch-to-squeeze range — don\'t rush the reps.'},
+      {name:'Seated Calf Raise', equip:'machine', strength:2, size:5, goal:'size', reps:'12–20 reps', rest:'60–75s',
+        desc:'The bent-knee position shifts emphasis onto the soleus, the muscle underneath the gastrocnemius.',
+        steps:['Sit with the pad resting on your knees, balls of your feet on the platform.','Lower your heels for a full stretch.','Raise up onto your toes, pausing at the top.'],
+        note:'Pairing this with standing raises hits both calf muscles for more complete lower-leg size.'},
+      {name:'Leg Press Calf Raise', equip:'machine', strength:2, size:4, goal:'size', reps:'12–15 reps', rest:'60s',
+        desc:'A convenient calf variation using the leg press machine you\'re often already on.',
+        steps:['Place just the balls of your feet on the lower edge of the platform.','Extend your ankles to press the platform away.','Return slowly to a full stretch.'],
+        note:'Handy for adding extra calf volume right after a leg press set.'},
+      {name:'Single-Leg Calf Raise', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'15–20 reps/leg', rest:'45–60s',
+        desc:'A bodyweight, no-equipment option that still delivers a solid calf burn.',
+        steps:['Stand on one foot on a step or flat ground, holding on for balance.','Lower your heel for a stretch.','Rise up onto your toes as high as you can.'],
+        note:'Simple and effective anywhere — increase reps or add a held weight as it gets easier.'}
+    ]},
+    { id:'cardio', name:'Cardio', side:'front', pos:{t:50,l:50,w:60,h:60},
+    blurb:'Conditioning work for endurance, heart health, and fat loss.',
+    exercises:[
+      {name:'Treadmill Incline Walk', equip:'machine', endurance:3, goal:'endurance', reps:'20–40 min', rest:'—',
+        desc:'A low-impact steady-state option that builds aerobic base without beating up your joints.',
+        steps:['Set the incline to 8–15% and a brisk but sustainable walking pace.','Hold a pace where you can still talk in short sentences.','Maintain for the full duration, adjusting incline or speed as needed.'],
+        note:'Great on rest days or after lifting since it barely adds to your overall fatigue.'},
+      {name:'Rowing Machine Intervals', equip:'machine', endurance:4, goal:'endurance', reps:'8–12 rounds', rest:'60–90s',
+        desc:'A full-body cardio option that also lightly taxes the back and legs.',
+        steps:['Row hard for 30–45 seconds, focusing on a strong leg drive.','Row easy or rest for the remainder of the interval.','Repeat for the target number of rounds.'],
+        note:'Good option when you want conditioning that still feels like it\'s training the body, not just the lungs.'},
+      {name:'Assault Bike Sprints', equip:'machine', endurance:5, goal:'endurance', reps:'6–10 rounds', rest:'60–90s',
+        desc:'A brutal but highly effective way to build conditioning fast in a short session.',
+        steps:['Sprint all-out on the bike for 20–30 seconds.','Pedal easy or rest completely for the remainder of the interval.','Repeat for the target number of rounds.'],
+        note:'Short and intense — a little goes a long way, so don\'t overdo the total volume early on.'},
+      {name:'Stair Climber', equip:'machine', endurance:4, goal:'endurance', reps:'15–30 min', rest:'—',
+        desc:'A steady-state option that also lightly works the quads and glutes.',
+        steps:['Set a moderate, sustainable step pace.','Keep your torso upright rather than leaning on the rails.','Maintain the pace for the full duration.'],
+        note:'A solid choice when you want cardio that leaves the legs slightly worked too.'},
+      {name:'Jump Rope', equip:'bodyweight', endurance:3, goal:'endurance', reps:'3–5 min', rest:'60s',
+        desc:'A cheap, portable conditioning tool that also builds calf endurance and coordination.',
+        steps:['Hold the rope handles at hip height, wrists doing most of the work.','Jump just high enough to clear the rope, landing softly.','Keep a steady rhythm for the target time.'],
+        note:'Easy to do anywhere — great as a warm-up or a quick finisher after lifting.'},
+      {name:'Sled Push', equip:'machine', endurance:5, goal:'endurance', reps:'20–40m', rest:'60–90s',
+        desc:'A brutal mix of strength and conditioning that\'s easy on the joints since there\'s no eccentric loading.',
+        steps:['Load the sled and get into a low, athletic pushing position.','Drive hard through your legs to push the sled forward.','Walk back and repeat for the target distance and rounds.'],
+        note:'One of the best tools for building work capacity without the joint pounding of running.'}
+    ]}
+];
+
+
+
+const EQUIP_LABEL = {barbell:'Barbell', dumbbell:'Dumbbell', cable:'Cable', machine:'Machine', bodyweight:'Bodyweight', wheel:'Ab Wheel'};
+const GOAL_LABEL = {strength:'Strength focus', size:'Size focus', both:'Strength &amp; Size', endurance:'Endurance focus'};
+
+/* ============ RENDER: HOME GRID ============ */
+const grid = document.getElementById('muscleGrid');
+MUSCLES.forEach(m=>{
+  const card = document.createElement('button');
+  card.className = 'm-card view-' + m.side;
+  const cropClass = (m.id==='quadriceps' || m.id==='hamstrings' || m.id==='hips') ? ' crop-middle'
+                   : (m.id==='calves') ? ' crop-bottom'
+                   : '';
+  card.innerHTML = `
+    <div class="m-figure${cropClass}">
+      <img src="${muscleImg(m)}" alt="${m.name}" loading="lazy">
+      <span class="side-tag">${m.side}</span>
+    </div>
+    <div>
+      <div class="m-name">${m.name}</div>
+      <div class="m-count">${m.exercises.length} exercises · ${m.blurb}</div>
+    </div>`;
+  card.addEventListener('click', ()=> openGroup(m.id));
+  grid.appendChild(card);
+});
+
+/* ============ VIEW SWITCHING ============ */
+const viewHome = document.getElementById('view-home');
+const viewGroup = document.getElementById('view-group');
+
+function goHome(){
+  viewGroup.classList.remove('active');
+  viewHome.classList.add('active');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant':'auto'});
+}
+
+// Establish a baseline history entry so the very first "back" has
+// somewhere in-app to land on instead of leaving the page.
+history.replaceState({view:'home'}, '', '#home');
+
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  // Let the browser/hardware back button handling below do the work,
+  // so back-button and this arrow behave identically.
+  history.back();
+});
+
+// Fires on browser/hardware back (and our own history.back() call above).
+window.addEventListener('popstate', ()=>{
+  if(backdrop.classList.contains('show')){
+    backdrop.classList.remove('show');
+    return;
+  }
+  goHome();
+});
+
+let currentMuscle = null;
+let currentFilter = 'all';
+
+function starRow(rating){
+  let out = '<div class="stars">';
+  for(let i=1;i<=5;i++){
+    out += i<=rating
+      ? `<svg class="star-filled" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z"/></svg>`
+      : `<svg class="star-empty" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z"/></svg>`;
+  }
+  return out + '</div>';
+}
+
+function openGroup(id){
+  currentMuscle = MUSCLES.find(m=>m.id===id);
+  currentFilter = 'all';
+  document.getElementById('groupName').textContent = currentMuscle.name;
+  document.getElementById('groupSub').textContent = currentMuscle.blurb;
+  document.getElementById('groupFigure').innerHTML =
+      `<img src="${muscleImg(currentMuscle)}" alt="${currentMuscle.name}" loading="lazy">`;
+  document.getElementById('autoPickResult').classList.remove('show');
+  document.getElementById('autoPickResult').innerHTML = '';
+  renderFilters();
+  renderExerciseList();
+  viewHome.classList.remove('active');
+  viewGroup.classList.add('active');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant':'auto'});
+  history.pushState({view:'group', id}, '', '#'+id);
+}
+
+function renderFilters(){
+  const row = document.getElementById('filterRow');
+  const equipSet = ['all', ...new Set(currentMuscle.exercises.map(e=>e.equip))];
+  row.innerHTML = '';
+  equipSet.forEach(eq=>{
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (eq===currentFilter ? ' active':'');
+    chip.textContent = eq==='all' ? 'All equipment' : EQUIP_LABEL[eq];
+    chip.addEventListener('click', ()=>{ currentFilter = eq; renderFilters(); renderExerciseList(); });
+    row.appendChild(chip);
+  });
+}
+
+function ratingLines(ex){
+  if(currentMuscle.id === 'cardio'){
+    return `<div class="rate-line"><span class="rate-label">END</span>${starRow(ex.endurance)}</div>`;
+  }
+  return `<div class="rate-line"><span class="rate-label">STR</span>${starRow(ex.strength)}</div>
+          <div class="rate-line"><span class="rate-label">SIZE</span>${starRow(ex.size)}</div>`;
+}
+
+function renderExerciseList(){
+  const list = document.getElementById('exList');
+  list.innerHTML = '';
+  const items = currentMuscle.exercises
+    .filter(e=> currentFilter==='all' || e.equip===currentFilter)
+    .slice()
+    .sort((a,b)=> currentMuscle.id==='cardio' ? (b.endurance - a.endurance) : ((b.strength+b.size) - (a.strength+a.size)));
+  items.forEach(ex=>{
+    const card = document.createElement('button');
+    card.className = 'ex-card';
+    card.innerHTML = `
+      <div class="ex-thumb"><img src="${exerciseImg(currentMuscle.id, ex)}" alt="${ex.name}" loading="lazy"></div>
+      <div class="ex-body">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-tags"><span class="tag">${EQUIP_LABEL[ex.equip]}</span><span class="dot"></span><span class="tag">${ex.reps}</span></div>
+        <div class="ratings">${ratingLines(ex)}</div>
+      </div>`;
+    card.addEventListener('click', ()=> openModal(ex));
+    list.appendChild(card);
+  });
+}
+
+/* ============ AUTO-PICK ============ */
+document.getElementById('autoPickBtn').addEventListener('click', ()=>{
+  const isCardio = currentMuscle.id === 'cardio';
+  const ranked = currentMuscle.exercises.slice().sort((a,b)=>
+    isCardio ? (b.endurance - a.endurance) : ((b.strength+b.size)-(a.strength+a.size))
+  );
+  const picks = ranked.slice(0,4);
+  const box = document.getElementById('autoPickResult');
+  box.innerHTML = picks.map((ex,i)=>`
+    <div class="pick-row">
+      <div class="pick-idx">${i+1}</div>
+      <div class="pick-info">
+        <div class="pick-name">${ex.name}</div>
+        <div class="pick-scheme">3 sets · ${ex.reps} · rest ${ex.rest}</div>
+      </div>
+      <div class="ratings">${ratingLines(ex)}</div>
+    </div>`).join('');
+  box.classList.add('show');
+});
+
+/* ============ MODAL ============ */
+const backdrop = document.getElementById('modalBackdrop');
+function openModal(ex){
+  const goalCls = ex.goal==='strength' ? 'goal-strength' : ex.goal==='size' ? 'goal-size' : ex.goal==='endurance' ? 'goal-endurance' : 'goal-both';
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-head">
+      <div class="modal-icon"><img src="${exerciseGif(currentMuscle.id, ex)}" alt="${ex.name}"></div>
+      <div>
+        <h2>${ex.name}</h2>
+        <div class="modal-tags">${EQUIP_LABEL[ex.equip]} · ${currentMuscle.name}</div>
+      </div>
+    </div>
+    <div class="goal-badge ${goalCls}">${GOAL_LABEL[ex.goal]}</div>
+    <div class="rating-cards">${
+      currentMuscle.id === 'cardio'
+        ? `<div class="rating-card" style="grid-column:1 / -1;"><div class="lbl">Endurance Rating</div>${starRow(ex.endurance)}</div>`
+        : `<div class="rating-card"><div class="lbl">Strength Rating</div>${starRow(ex.strength)}</div>
+           <div class="rating-card"><div class="lbl">Size Rating</div>${starRow(ex.size)}</div>`
+    }</div>
+    <p class="desc">${ex.desc}</p>
+    <h4>How to do it</h4>
+    <ul class="steps">${ex.steps.map((s,i)=>`<li><span class="step-num">${i+1}</span><span>${s}</span></li>`).join('')}</ul>
+    <h4>Rep &amp; rest guidance</h4>
+    <div class="scheme-box">
+      <div class="scheme-grid">
+        <div class="scheme-item"><div class="k">Rep range</div><div class="v">${ex.reps}</div></div>
+        <div class="scheme-item"><div class="k">Rest</div><div class="v">${ex.rest}</div></div>
+      </div>
+      <p class="scheme-note">${ex.note}</p>
+    </div>`;
+  backdrop.classList.add('show');
+}
+document.getElementById('modalClose').addEventListener('click', ()=> backdrop.classList.remove('show'));
+backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) backdrop.classList.remove('show'); });
+
+/* ============ GLOBAL SEARCH ============ */
+const searchInput = document.getElementById('globalSearch');
+const searchResults = document.getElementById('searchResults');
+const searchClear = document.getElementById('searchClear');
+
+function buildSearchIndex(){
+  const index = [];
+  MUSCLES.forEach(m=>{
+    index.push({type:'muscle', muscleId:m.id, name:m.name, sub:m.blurb, muscle:m});
+    m.exercises.forEach(ex=>{
+      index.push({type:'exercise', muscleId:m.id, name:ex.name, sub:m.name+' · '+EQUIP_LABEL[ex.equip], muscle:m, ex});
+    });
+  });
+  return index;
+}
+const SEARCH_INDEX = buildSearchIndex();
+
+function runSearch(q){
+  q = q.trim().toLowerCase();
+  if(!q){ searchResults.classList.remove('show'); searchClear.style.display='none'; return; }
+  searchClear.style.display='flex';
+  const matches = SEARCH_INDEX.filter(item=> item.name.toLowerCase().includes(q)).slice(0,8);
+
+  if(!matches.length){
+    searchResults.innerHTML = `<div class="search-empty">No matches for "${q}"</div>`;
+    searchResults.classList.add('show');
+    return;
+  }
+
+  const muscleMatches = matches.filter(m=>m.type==='muscle');
+  const exMatches = matches.filter(m=>m.type==='exercise');
+  let html = '';
+
+  if(muscleMatches.length){
+    html += `<div class="search-group-label">Muscle Groups</div>`;
+    muscleMatches.forEach(item=>{
+      html += `<button class="search-result-row" data-type="muscle" data-muscle="${item.muscleId}">
+        <div class="search-result-thumb"><img src="${muscleImg(item.muscle)}" alt=""></div>
+        <div><div class="search-result-name">${item.name}</div><div class="search-result-sub">${item.sub}</div></div>
+      </button>`;
+    });
+  }
+  if(exMatches.length){
+    html += `<div class="search-group-label">Exercises</div>`;
+    exMatches.forEach(item=>{
+      html += `<button class="search-result-row" data-type="exercise" data-muscle="${item.muscleId}" data-ex="${slug(item.name)}">
+        <div class="search-result-thumb"><img src="${exerciseImg(item.muscleId, item.ex)}" alt=""></div>
+        <div><div class="search-result-name">${item.name}</div><div class="search-result-sub">${item.sub}</div></div>
+      </button>`;
+    });
+  }
+  searchResults.innerHTML = html;
+  searchResults.classList.add('show');
+}
+
+searchInput.addEventListener('input', ()=> runSearch(searchInput.value));
+searchInput.addEventListener('focus', ()=> { if(searchInput.value.trim()) runSearch(searchInput.value); });
+
+searchClear.addEventListener('click', ()=>{
+  searchInput.value = '';
+  searchResults.classList.remove('show');
+  searchClear.style.display = 'none';
+  searchInput.focus();
+});
+
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('.search-wrap')) searchResults.classList.remove('show');
+});
+
+searchResults.addEventListener('click', (e)=>{
+  const row = e.target.closest('.search-result-row');
+  if(!row) return;
+  const muscleId = row.dataset.muscle;
+  openGroup(muscleId);
+  if(row.dataset.type === 'exercise'){
+    const exName = row.dataset.ex;
+    const ex = currentMuscle.exercises.find(x=> slug(x.name)===exName);
+    if(ex) setTimeout(()=> openModal(ex), 50);
+  }
+  searchResults.classList.remove('show');
+  searchInput.value = '';
+  searchClear.style.display = 'none';
+});
+
+/* ============ THEME TOGGLE ============ */
+const toggle = document.getElementById('themeToggle');
+function setMode(mode){
+  document.documentElement.classList.remove('force-light','force-dark');
+  if(mode==='light') document.documentElement.classList.add('force-light');
+  if(mode==='dark') document.documentElement.classList.add('force-dark');
+  toggle.querySelectorAll('button').forEach(b=> b.classList.toggle('active', b.dataset.mode===mode));
+}
+
+
+toggle.querySelectorAll('button').forEach(b=> b.addEventListener('click', ()=> setMode(b.dataset.mode)));
+setMode('system');
+</script>
+</body>
+</html>
