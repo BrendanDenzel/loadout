@@ -1241,18 +1241,20 @@ function openModal(ex){
 
   const gifImg = document.getElementById('modalGifImg');
   const gifSpinner = document.getElementById('modalGifSpinner');
-  function revealGif(){
-    // Small grace period after "load" so the spinner covers the static
-    // first frame briefly and only clears once playback is under way.
-    setTimeout(()=>{
-      gifSpinner.style.display = 'none';
-      gifImg.classList.add('loaded');
-    }, 450);
+  function showInstantly(){
+    gifSpinner.style.display = 'none';
+    gifImg.classList.add('loaded');
+  }
+  function revealAfterGrace(){
+    // Only used when the gif genuinely had to download — covers the
+    // static first frame briefly before the animation kicks in.
+    setTimeout(showInstantly, 450);
   }
   if(gifImg.complete && gifImg.naturalWidth > 0){
-    revealGif();
+    // Already cached/decoded (e.g. revisiting the same exercise) — show right away.
+    showInstantly();
   } else {
-    gifImg.onload = revealGif;
+    gifImg.onload = revealAfterGrace;
     gifImg.onerror = ()=>{ gifSpinner.style.display = 'none'; };
   }
 
