@@ -7,12 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
+
+:root{
     --bg:#F3F4F7;
     --bg-elevated:#FFFFFF;
     --surface:#FFFFFF;
     --surface-2:#EAECF1;
     --border:#DEE1E8;
+    --muscle-img-bg:#FFFFFF;
     --text:#12151B;
     --text-dim:#5B6270;
     --text-faint:#8A90A0;
@@ -34,6 +36,7 @@
       --surface:#171A21;
       --surface-2:#1E222B;
       --border:#282D38;
+      --muscle-img-bg:#232833;
       --text:#EDEFF3;
       --text-dim:#9AA1B1;
       --text-faint:#666D7E;
@@ -47,13 +50,13 @@
     }
   }
   html.force-light{ color-scheme: light;
-    --bg:#F3F4F7;--bg-elevated:#FFFFFF;--surface:#FFFFFF;--surface-2:#EAECF1;--border:#DEE1E8;
+    --bg:#F3F4F7;--bg-elevated:#FFFFFF;--surface:#FFFFFF;--surface-2:#EAECF1;--border:#DEE1E8;--muscle-img-bg:#FFFFFF;
     --text:#12151B;--text-dim:#5B6270;--text-faint:#8A90A0;--accent:#E4572E;--accent-2:#2F6FED;
     --accent-soft:rgba(228,87,46,0.12);--accent2-soft:rgba(47,111,237,0.12);--gold:#E3A008;
     --shadow:0 1px 2px rgba(20,22,30,0.04), 0 8px 24px -12px rgba(20,22,30,0.12);
   }
   html.force-dark{ color-scheme: dark;
-    --bg:#0D0F13;--bg-elevated:#15181F;--surface:#171A21;--surface-2:#1E222B;--border:#282D38;
+    --bg:#0D0F13;--bg-elevated:#15181F;--surface:#171A21;--surface-2:#1E222B;--border:#282D38;--muscle-img-bg:#232833;
     --text:#EDEFF3;--text-dim:#9AA1B1;--text-faint:#666D7E;--accent:#FF7A54;--accent-2:#5B93FF;
     --accent-soft:rgba(255,122,84,0.14);--accent2-soft:rgba(91,147,255,0.14);--gold:#F0B429;
     --shadow:0 1px 2px rgba(0,0,0,0.3), 0 12px 32px -14px rgba(0,0,0,0.6);
@@ -194,7 +197,7 @@
   .m-card:active{transform:translateY(0px) scale(.98);}
   .m-figure{
     position:relative; aspect-ratio:1/1; border-radius:var(--radius-md);
-    background:#FFFFFF; overflow:hidden;
+    background:var(--muscle-img-bg); overflow:hidden;
   }
   .m-figure img{width:100%; height:100%; object-fit:cover; object-position:top; display:block;}
   .m-figure.crop-bottom img{object-position:bottom;}
@@ -300,10 +303,11 @@
   .modal-close svg{width:15px;height:15px;}
   .modal-head{display:flex; gap:14px; align-items:flex-start; margin-bottom:16px; padding-right:36px;}
   .modal-icon{
-    width:56px; height:56px; border-radius:14px; background:#FFFFFF;
-    display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;
-  }
-  .modal-icon img{width:100%; height:100%; object-fit:contain; padding:8px;}
+  width:56px; height:56px; border-radius:14px; background:#FFFFFF;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;
+  transform:translateZ(0);
+}
+.modal-icon img{width:100%; height:100%; object-fit:contain; padding:8px; border-radius:14px;}
   .modal-head h2{font-size:20px; margin:0 0 4px;}
   .modal-tags{display:flex; gap:6px; flex-wrap:wrap; font-size:11.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.04em; font-weight:600;}
 
@@ -312,10 +316,15 @@
       flex-direction:column; align-items:center; text-align:center;
       padding-right:0; gap:12px;
     }
-    .modal-icon{
-      width:100%; max-width:260px; height:auto; aspect-ratio:1/1;
-      border-radius:var(--radius-lg);
-    }
+    @media (max-width:640px){
+  .modal-icon{
+    width:100%; max-width:260px; height:auto; aspect-ratio:1/1;
+    border-radius:var(--radius-lg);
+  }
+  .modal-icon img{
+    border-radius:var(--radius-lg);
+  }
+}
     .modal-head h2{font-size:21px;}
     .modal-tags{justify-content:center;}
   }
@@ -471,7 +480,7 @@ const MUSCLES = [
   { id:'chest', name:'Chest', side:'front', pos:{t:32,l:50,w:46,h:20},
     blurb:'Pressing power for a bigger, thicker chest.',
     exercises:[
-      {name:'Barbell Bench Press', equip:'barbell', strength:5, size:4, goal:'both', reps:'3–6 reps', rest:'3–5 min',
+      {name:'Barbell Bench Press', equip:'barbell', strength:5, size:5, goal:'both', reps:'3–6 reps', rest:'3–5 min',
         desc:'The benchmark upper-body strength lift. A flat barbell press that lets you move the most total weight through the chest, front delts and triceps.',
         steps:['Lie on the bench, feet flat, shoulder blades pulled together and down.','Grip the bar just wider than shoulder-width, unrack, and lower it to your lower chest with control.','Press back up in a slight arc until your arms are fully extended.'],
         note:'Because it lets you overload the most weight, treat this as your main strength movement — build up in low reps with long rest, then use it heavier as your other chest lifts get you tired.'},
@@ -498,7 +507,27 @@ const MUSCLES = [
       {name:'Push-Up', equip:'bodyweight', strength:2, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
         desc:'A no-equipment staple that builds chest endurance and is easy to scale anywhere.',
         steps:['Hands slightly wider than shoulders, body in a straight line.','Lower your chest to just above the floor.','Push back up to full arm extension.'],
-        note:'Great warm-up or high-rep finisher; add a weight plate on your back to keep it challenging as you get stronger.'}
+        note:'Great warm-up or high-rep finisher; add a weight plate on your back to keep it challenging as you get stronger.'},
+      {name:'Decline Barbell Press', equip:'barbell', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'A decline angle shifts emphasis onto the lower chest while still allowing heavy compound loading.',
+        steps:['Secure your feet and lie back on a decline bench.','Lower the bar to your lower chest with control.','Press back up until arms are extended.'],
+        note:'Useful if your lower chest lags — otherwise treat it as a rotation on flat/incline pressing.'},
+      {name:'Pec Deck Machine', equip:'machine', strength:2, size:5, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'A guided fly pattern that isolates the chest without needing stabilization.',
+        steps:['Sit tall with back against the pad, forearms on the arms of the machine.','Bring your arms together in front of your chest, squeezing hard.','Return slowly to a comfortable stretch.'],
+        note:'Very joint-friendly — great for beginners or as a safe way to chase a deep chest pump.'},
+      {name:'Flat Dumbbell Press', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'A flat-bench dumbbell press that allows a deeper stretch than a barbell and works each side independently.',
+        steps:['Lie on a flat bench with a dumbbell in each hand at chest level.','Press up until arms are extended, dumbbells nearly touching.','Lower slowly to a deep stretch at the bottom.'],
+        note:'A solid all-around builder — swap in for barbell bench when you want extra range of motion or less shoulder strain.'},
+      {name:'Cable Fly (Low)', equip:'cable', strength:1, size:4, goal:'size', reps:'12–15 reps', rest:'45–60s',
+        desc:'Pulling from low to high biases the upper chest and front delts with constant tension.',
+        steps:['Set both pulleys to the lowest position, grab a handle in each hand.','Bring your arms up and together in front of your upper chest.','Lower slowly back to the start.'],
+        note:'A great way to finish off the upper chest after heavier incline work.'},
+      {name:'Diamond Push-Up', equip:'bodyweight', strength:2, size:3, goal:'size', reps:'10–20 reps', rest:'45–60s',
+        desc:'A close-hand push-up variation that shifts more load onto the inner chest and triceps.',
+        steps:['Form a diamond shape with your thumbs and index fingers on the floor.','Lower your chest toward your hands, elbows tracking close to your body.','Push back up to full extension.'],
+        note:'Harder than a standard push-up — great bodyweight finisher when equipment isn\'t available.'}
     ]},
   { id:'back', name:'Back', side:'back', pos:{t:30,l:50,w:56,h:26},
     blurb:'Width and thickness from pulling movements.',
@@ -530,7 +559,27 @@ const MUSCLES = [
       {name:'Straight-Arm Pulldown', equip:'cable', strength:1, size:3, goal:'size', reps:'12–15 reps', rest:'60s',
         desc:'An isolation move that hits the lats without involving the arms much at all.',
         steps:['Stand facing a high cable, arms straight, slight forward lean.','Pull the bar down to your thighs, keeping elbows nearly locked.','Let it rise back to shoulder height under control.'],
-        note:'Use light-moderate weight and go for a strong stretch and squeeze rather than chasing heavy loads.'}
+        note:'Use light-moderate weight and go for a strong stretch and squeeze rather than chasing heavy loads.'},
+      {name:'T-Bar Row', equip:'dumbbell', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+        desc:'A chest-supported-style heavy row (or machine version) that piles thickness onto the mid-back.',
+        steps:['Straddle the bar with a hip hinge and flat back, chest up.','Pull the dumbbells into your torso, squeezing shoulder blades together.','Lower under control without rounding your back.'],
+        note:'One of the best raw mass builders for back thickness — go moderately heavy.'},
+      {name:'Incline Row', equip:'machine', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s',
+        desc:'Removes lower-back strain entirely by supporting your chest, letting you focus purely on pulling.',
+        steps:['Lie chest-down against the pad, grip the handles.','Row your elbows back, squeezing your shoulder blades together.','Extend forward slowly to a full stretch.'],
+        note:'Great option when your lower back is fatigued but you still want to train back thickness hard.'},
+      {name:'Inverted Row', equip:'bodyweight', strength:2, size:3, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'A bodyweight horizontal pull under a bar or rings — an accessible pull-up alternative.',
+        steps:['Set a bar at hip height, lie under it, and grab it with an overhand grip.','Keeping your body straight, pull your chest up to the bar.','Lower under control to full arm extension.'],
+        note:'Easy to scale by adjusting bar height or foot position — great for building pulling strength anywhere.'},
+      {name:'Cable Pullover', equip:'cable', strength:2, size:4, goal:'size', reps:'10–15 reps', rest:'60–90s',
+        desc:'An isolation move that stretches and contracts the lats through a long arc, similar to a straight-arm pulldown but from a high pulley.',
+        steps:['Stand or kneel facing away from a high cable with a straight bar attachment.','With slightly bent arms, pull the bar down and back toward your hips.','Return slowly to a full overhead stretch.'],
+        note:'Great lat-isolation finisher — focus on the stretch at the top rather than the weight used.'},
+      {name:'Rack Pull', equip:'barbell', strength:5, size:3, goal:'strength', reps:'3–6 reps', rest:'3–4 min',
+        desc:'A partial deadlift from knee height that lets you overload the upper back and traps with heavier weight.',
+        steps:['Set safety pins in a rack to just below knee height and load the bar.','Grip the bar, brace, and stand up to full lockout.','Lower back to the pins under control.'],
+        note:'Lets you handle heavier loads than a full deadlift — great for building raw pulling strength and trap thickness.'}
     ]},
   { id:'shoulders', name:'Shoulders', side:'front', pos:{t:16,l:24,w:20,h:14},
     blurb:'Rounder, more capped delts, front to back.',
@@ -562,7 +611,23 @@ const MUSCLES = [
       {name:'Arnold Press', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
         desc:'A rotational press that works the delts through a bigger range than a standard press.',
         steps:['Start with dumbbells at shoulder height, palms facing you.','Press up while rotating palms to face forward at the top.','Reverse the rotation as you lower back down.'],
-        note:'The rotation adds extra time under tension across all three delt heads.'}
+        note:'The rotation adds extra time under tension across all three delt heads.'},
+      {name:'Machine Shoulder Press', equip:'machine', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s–2 min',
+        desc:'A guided overhead press that lets you push close to failure without balance concerns.',
+        steps:['Sit with back against the pad, handles at shoulder height.','Press up until arms are extended without locking out hard.','Lower slowly back to the start.'],
+        note:'Good for beginners or for safely pushing extra sets near failure.'},
+      {name:'Upright Row', equip:'barbell', strength:3, size:4, goal:'both', reps:'8–12 reps', rest:'90s',
+        desc:'A vertical pulling movement that hits the side delts and traps together.',
+        steps:['Stand holding a barbell or EZ-bar with a shoulder-width grip.','Pull the bar up along your body to roughly chest height, elbows leading.','Lower under control.'],
+        note:'Keep the bar close to your body and avoid pulling too high to protect the shoulders.'},
+      {name:'Pike Push-Up', equip:'bodyweight', strength:2, size:3, goal:'size', reps:'8–15 reps', rest:'60–90s',
+        desc:'A bodyweight pressing move that mimics an overhead press angle using just your hips and shoulders.',
+        steps:['Start in a downward-dog position, hips high, hands shoulder-width.','Bend your elbows to lower your head toward the floor.','Press back up to the start position.'],
+        note:'A solid no-equipment option for building pressing strength before progressing to handstand push-ups.'},
+      {name:'Cable Front Raise', equip:'cable', strength:1, size:3, goal:'size', reps:'12–15 reps', rest:'45–60s',
+        desc:'Isolates the front delt with constant tension, unlike a dumbbell version which loses tension at the top.',
+        steps:['Stand facing away from a low pulley, handle in one hand.','Raise your arm straight in front of you to shoulder height.','Lower slowly under control.'],
+        note:'Useful as a light finisher, though most lifters need less front-delt work than side or rear.'}
     ]},
   { id:'biceps', name:'Biceps', side:'front', pos:{t:22,l:16,w:16,h:16},
     blurb:'Peak and thickness through the front of the arm.',
@@ -587,10 +652,26 @@ const MUSCLES = [
         desc:'Constant cable tension keeps the biceps working even at the top and bottom of the rep.',
         steps:['Stand facing a low pulley with a straight or EZ bar attachment.','Curl up, keeping elbows fixed at your sides.','Lower slowly, resisting the cable the whole way.'],
         note:'Good finisher move — the tension never fully releases, which drives a strong pump.'},
-      {name:'Concentration Curl', equip:'dumbbell', strength:1, size:4, goal:'size', reps:'10–15 reps', rest:'60s',
+      {name:'Concentration Curl', equip:'dumbbell', strength:1, size:5, goal:'size', reps:'10–15 reps', rest:'60s',
         desc:'A seated, braced curl that isolates one bicep at a time for peak contraction.',
         steps:['Sit, elbow braced against your inner thigh, dumbbell hanging down.','Curl up slowly, squeezing hard at the top.','Lower under full control.'],
-        note:'Best used at the end of an arm session to finish each bicep off with total focus.'}
+        note:'Best used at the end of an arm session to finish each bicep off with total focus.'},
+      {name:'Chin-Up', equip:'bodyweight', strength:4, size:4, goal:'both', reps:'5–10 reps', rest:'2–3 min',
+        desc:'An underhand-grip pull-up variation that shifts significant load onto the biceps alongside the back.',
+        steps:['Hang from a bar with an underhand, shoulder-width grip.','Pull your chin above the bar, keeping elbows close to your body.','Lower under control to a full hang.'],
+        note:'One of the best compound bicep builders — add weight once bodyweight reps get easy.'},
+      {name:'Machine Bicep Curl', equip:'machine', strength:2, size:4, goal:'size', reps:'10–15 reps', rest:'60–75s',
+        desc:'A guided curl path that removes shoulder swing and keeps tension purely on the biceps.',
+        steps:['Sit and adjust the seat so your elbows line up with the pivot.','Curl the handles up, squeezing at the top.','Lower slowly under control.'],
+        note:'Very beginner-friendly and easy to push close to failure safely.'},
+      {name:'Incline Dumbbell Curl', equip:'dumbbell', strength:2, size:5, goal:'size', reps:'10–12 reps', rest:'75s',
+        desc:'Sitting back on an incline stretches the biceps at the bottom for a bigger growth stimulus.',
+        steps:['Sit back on an incline bench, arms hanging straight down.','Curl the dumbbells up without swinging your shoulders forward.','Lower slowly to a full stretch.'],
+        note:'The extended stretch position makes this one of the best size-focused bicep variations.'},
+      {name:'Spider Curl', equip:'dumbbell', strength:1, size:4, goal:'size', reps:'10–15 reps', rest:'60s',
+        desc:'Performed face-down on an incline bench, removing all momentum for a strict, isolated contraction.',
+        steps:['Lie face-down on an incline bench, arms hanging straight below you.','Curl up, squeezing hard at the top without any body movement.','Lower slowly under control.'],
+        note:'Excellent peak-contraction finisher since cheating is essentially impossible in this position.'}
     ]},
   { id:'triceps', name:'Triceps', side:'back', pos:{t:24,l:84,w:16,h:16},
     blurb:'Build the mass on the back of the arm.',
@@ -599,7 +680,7 @@ const MUSCLES = [
         desc:'A compound press with a narrow grip that shifts the load heavily onto the triceps.',
         steps:['Lie on a flat bench, hands just inside shoulder-width on the bar.','Lower the bar to your lower chest, elbows tucked close.','Press back up to lockout, squeezing the triceps.'],
         note:'The best triceps strength builder — treat it like a pressing lift and go heavy with low reps.'},
-      {name:'Weighted Dips', equip:'bodyweight', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2–3 min',
+      {name:'Weighted Dips', equip:'bodyweight', strength:4, size:5, goal:'both', reps:'6–10 reps', rest:'2–3 min',
         desc:'Staying more upright than a chest dip shifts more of the work onto the triceps.',
         steps:['Support yourself on parallel bars, torso kept upright.','Lower with elbows tracking back, not flared out.','Press back up to full lockout.'],
         note:'A more upright torso than the chest version keeps this triceps-dominant.'},
@@ -618,12 +699,24 @@ const MUSCLES = [
       {name:'Single-Arm DB Extension', equip:'dumbbell', strength:1, size:3, goal:'size', reps:'10–15 reps', rest:'60s',
         desc:'A light isolation move that\'s easy to feel and good for fixing imbalances.',
         steps:['Hold a dumbbell overhead in one hand, elbow pointed up.','Lower it behind your head under control.','Extend back to the top, squeezing the triceps.'],
-        note:'Great high-rep finisher to burn out the triceps at the end of an arm day.'}
+        note:'Great high-rep finisher to burn out the triceps at the end of an arm day.'},
+      {name:'Machine Tricep Extension', equip:'machine', strength:2, size:4, goal:'size', reps:'10–15 reps', rest:'60–75s',
+        desc:'A guided extension path that isolates the triceps without needing balance or stabilization.',
+        steps:['Sit with upper arms resting on the pad, grip the handles.','Extend your arms until straight, squeezing at the bottom.','Return slowly under control.'],
+        note:'Beginner-friendly and easy to push close to failure safely.'},
+      {name:'Bench Dip', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
+        desc:'A no-equipment triceps burner using just a bench or sturdy chair.',
+        steps:['Place your hands on the edge of a bench behind you, legs extended out.','Lower your hips toward the floor by bending your elbows.','Press back up to full extension.'],
+        note:'Great anywhere finisher — add a weight plate on your lap to keep progressing.'},
+      {name:'JM Press', equip:'barbell', strength:3, size:4, goal:'both', reps:'6–10 reps', rest:'2 min',
+        desc:'A hybrid between a close-grip bench and a skull crusher that allows heavy triceps-focused loading.',
+        steps:['Lie on a bench with a close grip on the barbell above your chest.','Lower the bar toward your neck/chin, elbows tracking forward slightly.','Press back up to lockout.'],
+        note:'A favorite among powerlifters for building serious triceps strength — start light until the groove feels natural.'}
     ]},
     { id:'forearms', name:'Forearms', side:'front', pos:{t:38,l:14,w:14,h:16},
     blurb:'Grip strength and lower-arm size.',
     exercises:[
-      {name:'Farmer\'s Carry', equip:'dumbbell', strength:5, size:3, goal:'strength', reps:'30–45s walk', rest:'90s–2 min',
+      {name:'Farmer\'s Carry', equip:'dumbbell', strength:5, size:4, goal:'strength', reps:'30–45s walk', rest:'90s–2 min',
         desc:'A heavy carry that builds crushing grip strength along with total-body stability.',
         steps:['Pick up a heavy dumbbell or kettlebell in each hand.','Stand tall and walk for the given distance or time.','Set down under control once grip starts to fail.'],
         note:'Go as heavy as you can hold with good posture — grip strength here transfers directly to every other lift.'},
@@ -631,7 +724,7 @@ const MUSCLES = [
         desc:'A direct isolation move for the forearm flexors on the underside of the arm.',
         steps:['Sit with your forearms resting on your thighs, palms up, bar in hand.','Curl your wrists up as far as possible.','Lower slowly for a full stretch.'],
         note:'Keep the reps slow and controlled — forearms respond well to a strong stretch and squeeze.'},
-      {name:'Reverse Wrist Curl', equip:'barbell', strength:1, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
+      {name:'Barbell Reverse Wrist Curl', equip:'barbell', strength:1, size:3, goal:'size', reps:'12–20 reps', rest:'45–60s',
         desc:'Targets the extensors on top of the forearm, important for balance and elbow health.',
         steps:['Sit with forearms on your thighs, palms down, bar in hand.','Curl your wrists up as high as you can.','Lower slowly to a full stretch.'],
         note:'Often neglected, but pairing this with regular wrist curls builds more complete, balanced forearms.'},
@@ -651,7 +744,7 @@ const MUSCLES = [
   { id:'abs', name:'Abs', side:'front', pos:{t:47,l:50,w:26,h:18},
     blurb:'A stronger, more visible midsection.',
     exercises:[
-      {name:'Hanging Leg Raise', equip:'bodyweight', strength:2, size:4, goal:'size', reps:'8–15 reps', rest:'60–75s',
+      {name:'Hanging Leg Raise', equip:'bodyweight', strength:2, size:5, goal:'size', reps:'8–15 reps', rest:'60–75s',
         desc:'A demanding bodyweight move that hits the lower abs and hip flexors hard.',
         steps:['Hang from a bar with straight arms.','Raise your legs up toward your chest, curling your pelvis.','Lower slowly under control without swinging.'],
         note:'Bend the knees if straight-leg reps are too hard — control matters more than range here.'},
@@ -667,11 +760,11 @@ const MUSCLES = [
         desc:'An isometric hold that builds core stability and endurance rather than visible size.',
         steps:['Support yourself on forearms and toes, body in a straight line.','Brace your abs and glutes, avoiding a sagging hips.','Hold for time.'],
         note:'Great for building the stability that supports every other lift, but not a strong muscle-size tool on its own.'},
-      {name:'Weighted Sit-Up', equip:'bodyweight', strength:3, size:3, goal:'both', reps:'10–15 reps', rest:'60–75s',
-        desc:'A full range-of-motion crunch with added load for extra resistance.',
-        steps:['Lie on your back, knees bent, holding a plate on your chest.','Curl up to a full sitting position.','Lower back down under control.'],
+      {name:'Sit-Up', equip:'bodyweight', strength:3, size:3, goal:'both', reps:'10–15 reps', rest:'60–75s',
+        desc:'A full range-of-motion crunch with added weight for extra resistance.',
+        steps:['Lie on your back, knees bent, holding a plate on your chest if needed.','Curl up to a full sitting position.','Lower back down under control.'],
         note:'Adding a light plate turns a bodyweight endurance move into a real strength-and-size builder.'},
-      {name:'Russian Twist', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'12–20 reps/side', rest:'45–60s',
+      {name:'Russian Twist', equip:'bodyweight', strength:1, size:4, goal:'size', reps:'12–20 reps/side', rest:'45–60s',
         desc:'A rotational move that targets the obliques for a more complete core.',
         steps:['Sit with knees bent, leaning back slightly, feet lifted or grounded.','Rotate a weight from side to side, touching the floor each side.','Keep your core braced throughout.'],
         note:'Add a light plate or dumbbell once bodyweight reps feel easy.'}
@@ -713,7 +806,7 @@ const MUSCLES = [
         desc:'A hip-hinge movement that heavily loads the hamstrings through a long stretch.',
         steps:['Hold a bar at hip height, soft knees.','Hinge at the hips, pushing them back as the bar slides down your legs.','Reverse the motion, driving hips forward to stand tall.'],
         note:'The deep stretch under load makes this one of the best hamstring builders for strength and size alike.'},
-      {name:'Nordic Curl', equip:'bodyweight', strength:3, size:4, goal:'both', reps:'5–8 reps', rest:'90s–2 min',
+      {name:'Nordic Curl', equip:'bodyweight', strength:3, size:5, goal:'both', reps:'5–8 reps', rest:'90s–2 min',
         desc:'A tough eccentric-focused bodyweight move known for building serious hamstring strength.',
         steps:['Kneel with your ankles anchored, torso upright.','Lower your torso forward as slowly as possible, resisting with your hamstrings.','Catch yourself and push back up, or lower fully with control.'],
         note:'Extremely effective but hard — start with a partial range and build up over weeks.'},
@@ -767,11 +860,11 @@ const MUSCLES = [
   { id:'calves', name:'Calves', side:'back', pos:{t:86,l:50,w:24,h:14},
     blurb:'Lower-leg size and power.',
     exercises:[
-      {name:'Standing Calf Raise', equip:'machine', strength:3, size:4, goal:'both', reps:'8–15 reps', rest:'60–90s',
+      {name:'Machine Standing Calf Raise', equip:'machine', strength:3, size:5, goal:'both', reps:'8–15 reps', rest:'60–90s',
         desc:'A straight-knee raise that targets the larger gastrocnemius muscle.',
         steps:['Stand with the balls of your feet on the platform, shoulders under the pads.','Lower your heels for a deep stretch.','Rise up onto your toes as high as possible, squeezing at the top.'],
         note:'Calves respond well to a full stretch-to-squeeze range — don\'t rush the reps.'},
-      {name:'Seated Calf Raise', equip:'machine', strength:2, size:5, goal:'size', reps:'12–20 reps', rest:'60–75s',
+      {name:'Machine Seated Calf Raise', equip:'machine', strength:2, size:4, goal:'size', reps:'12–20 reps', rest:'60–75s',
         desc:'The bent-knee position shifts emphasis onto the soleus, the muscle underneath the gastrocnemius.',
         steps:['Sit with the pad resting on your knees, balls of your feet on the platform.','Lower your heels for a full stretch.','Raise up onto your toes, pausing at the top.'],
         note:'Pairing this with standing raises hits both calf muscles for more complete lower-leg size.'},
@@ -791,7 +884,7 @@ const MUSCLES = [
         desc:'A low-impact steady-state option that builds aerobic base without beating up your joints.',
         steps:['Set the incline to 8–15% and a brisk but sustainable walking pace.','Hold a pace where you can still talk in short sentences.','Maintain for the full duration, adjusting incline or speed as needed.'],
         note:'Great on rest days or after lifting since it barely adds to your overall fatigue.'},
-      {name:'Rowing Machine Intervals', equip:'machine', endurance:4, goal:'endurance', reps:'8–12 rounds', rest:'60–90s',
+      {name:'Rowing Machine', equip:'machine', endurance:4, goal:'endurance', reps:'8–12 rounds', rest:'60–90s',
         desc:'A full-body cardio option that also lightly taxes the back and legs.',
         steps:['Row hard for 30–45 seconds, focusing on a strong leg drive.','Row easy or rest for the remainder of the interval.','Repeat for the target number of rounds.'],
         note:'Good option when you want conditioning that still feels like it\'s training the body, not just the lungs.'},
@@ -799,10 +892,10 @@ const MUSCLES = [
         desc:'A brutal but highly effective way to build conditioning fast in a short session.',
         steps:['Sprint all-out on the bike for 20–30 seconds.','Pedal easy or rest completely for the remainder of the interval.','Repeat for the target number of rounds.'],
         note:'Short and intense — a little goes a long way, so don\'t overdo the total volume early on.'},
-      {name:'Stair Climber', equip:'machine', endurance:4, goal:'endurance', reps:'15–30 min', rest:'—',
-        desc:'A steady-state option that also lightly works the quads and glutes.',
-        steps:['Set a moderate, sustainable step pace.','Keep your torso upright rather than leaning on the rails.','Maintain the pace for the full duration.'],
-        note:'A solid choice when you want cardio that leaves the legs slightly worked too.'},
+      {name:'Treadmill Run', equip:'machine', endurance:4, goal:'endurance', reps:'15–30 min', rest:'—',
+        desc:'A cardio exercise that improves endurance while strengthening the calves, quads, hamstrings, and glutes.',
+        steps:['Set the treadmill to a comfortable running speed and begin with a light warm-up.','Run with an upright posture, relaxed shoulders, and avoid holding the handrails.','Maintain a steady pace or vary your speed with intervals for the desired duration.'],
+        note:'Focus on controlled breathing and land softly to reduce impact while improving cardiovascular fitness.'},
       {name:'Jump Rope', equip:'bodyweight', endurance:3, goal:'endurance', reps:'3–5 min', rest:'60s',
         desc:'A cheap, portable conditioning tool that also builds calf endurance and coordination.',
         steps:['Hold the rope handles at hip height, wrists doing most of the work.','Jump just high enough to clear the rope, landing softly.','Keep a steady rhythm for the target time.'],
@@ -827,10 +920,11 @@ MUSCLES.forEach(m=>{
   const cropClass = (m.id==='quadriceps' || m.id==='hamstrings' || m.id==='hips') ? ' crop-middle'
                    : (m.id==='calves') ? ' crop-bottom'
                    : '';
+  /* NEW */
   card.innerHTML = `
     <div class="m-figure${cropClass}">
       <img src="${muscleImg(m)}" alt="${m.name}" loading="lazy">
-      <span class="side-tag">${m.side}</span>
+      ${m.id !== 'cardio' ? `<span class="side-tag">${m.side}</span>` : ''}
     </div>
     <div>
       <div class="m-name">${m.name}</div>
@@ -867,10 +961,28 @@ window.addEventListener('popstate', ()=>{
     return;
   }
   goHome();
+});document.getElementById('autoPickBtn').addEventListener('click', ()=>{
+  const isCardio = currentMuscle.id === 'cardio';
+  const ranked = currentMuscle.exercises.slice().sort((a,b)=>
+    isCardio ? (b.endurance - a.endurance) : ((b.strength+b.size)-(a.strength+a.size))
+  );
+  const picks = ranked.slice(0,4);
+  const box = document.getElementById('autoPickResult');
+  box.innerHTML = picks.map((ex,i)=>`
+    <div class="pick-row">
+      <div class="pick-idx">${i+1}</div>
+      <div class="pick-info">
+        <div class="pick-name">${ex.name}</div>
+        <div class="pick-scheme">3 sets · ${ex.reps} · rest ${ex.rest}</div>
+      </div>
+      <div class="ratings">${ratingLines(ex)}</div>
+    </div>`).join('');
+  box.classList.add('show');
 });
 
 let currentMuscle = null;
 let currentFilter = 'all';
+let currentAutoPicks = [];
 
 function starRow(rating){
   let out = '<div class="stars">';
@@ -948,10 +1060,10 @@ document.getElementById('autoPickBtn').addEventListener('click', ()=>{
   const ranked = currentMuscle.exercises.slice().sort((a,b)=>
     isCardio ? (b.endurance - a.endurance) : ((b.strength+b.size)-(a.strength+a.size))
   );
-  const picks = ranked.slice(0,4);
+  currentAutoPicks = ranked.slice(0,4);
   const box = document.getElementById('autoPickResult');
-  box.innerHTML = picks.map((ex,i)=>`
-    <div class="pick-row">
+  box.innerHTML = currentAutoPicks.map((ex,i)=>`
+    <div class="pick-row" data-index="${i}">
       <div class="pick-idx">${i+1}</div>
       <div class="pick-info">
         <div class="pick-name">${ex.name}</div>
@@ -960,6 +1072,13 @@ document.getElementById('autoPickBtn').addEventListener('click', ()=>{
       <div class="ratings">${ratingLines(ex)}</div>
     </div>`).join('');
   box.classList.add('show');
+});
+
+document.getElementById('autoPickResult').addEventListener('click', (e)=>{
+  const row = e.target.closest('.pick-row');
+  if(!row) return;
+  const ex = currentAutoPicks[Number(row.dataset.index)];
+  if(ex) openModal(ex);
 });
 
 /* ============ MODAL ============ */
