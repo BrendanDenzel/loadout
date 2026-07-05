@@ -367,6 +367,14 @@
     display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;
     font-family:'JetBrains Mono',monospace; color:var(--text-dim); margin-top:1px;
   }
+.lib-counter{
+  display:inline-flex; align-items:center; gap:7px; margin-top:12px;
+  font-size:12.5px; font-weight:600; color:var(--text-dim);
+  background:var(--surface); border:1px solid var(--border); border-radius:999px;
+  padding:7px 13px; box-shadow:var(--shadow);
+}
+.lib-counter svg{width:14px; height:14px; color:var(--accent); flex-shrink:0;}
+.lib-counter span{color:var(--text); font-family:'JetBrains Mono',monospace; font-weight:700;}
   .scheme-box{
     background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px;
   }
@@ -412,6 +420,11 @@
       </button>
       <div class="search-results" id="searchResults"></div>
     </div>
+
+    <div class="lib-counter" id="libCounter">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>
+  <span id="libCounterNum">0</span> exercises in the library
+</div>
 
     <div class="section-label"><h2>Muscle Groups</h2></div>
     <div class="muscle-grid" id="muscleGrid"></div>
@@ -632,7 +645,7 @@ const MUSCLES = [
   desc:'A machine-assisted version of the pull-up that lets you build toward bodyweight reps with full range of motion.',
   steps:['Kneel on the assist platform, set the counterweight, and grip the bar overhand.','Pull your chest toward the bar, driving elbows down and back.','Lower under control to a full stretch.'],
   note:'Reduce the assistance weight over time as you get stronger, working toward unassisted pull-ups.'},
-{name:'Hyperextension', equip:'bodyweight', strength:2, size:2, goal:'strength', reps:'10–15 reps', rest:'60–90s',
+{name:'Hyperextension', equip:'bodyweight', strength:2, size:2, goal:'both', reps:'10–15 reps', rest:'60–90s',
   desc:'A lower-back and glute/hamstring builder performed on a Roman chair, important for spinal strength and injury prevention.',
   steps:['Position your hips on the pad, ankles secured, body folded forward at the waist.','Raise your torso up until your body forms a straight line.','Lower slowly back down under control without rounding your back.'],
   note:'Add a plate to your chest once bodyweight reps get easy — this builds a strong, resilient lower back.'}
@@ -828,7 +841,7 @@ const MUSCLES = [
   desc:'Targets the extensor muscles on top of the forearm one arm at a time, supporting elbow health and grip balance.',
   steps:['Sit with your forearm on your thigh, palm down, dumbbell in hand.','Curl your wrist up as high as you can.','Lower slowly to a full stretch.'],
   note:'Pair with regular wrist curls to keep the front and back of the forearm developing evenly.'},
-{name:'Behind Back Barbell Finger Curl', equip:'barbell', strength:1, size:3, goal:'strength', reps:'15–20 reps', rest:'45–60s',
+{name:'Behind Back Barbell Finger Curl', equip:'barbell', strength:1, size:3, goal:'size', reps:'15–20 reps', rest:'45–60s',
   desc:'A finger-flexor-focused grip move performed behind the body, building crushing grip strength.',
   steps:['Stand holding a barbell behind your back, arms straight, gripped only in your fingers.','Let the bar roll down to your fingertips.','Curl your fingers to roll the bar back into your palms.'],
   note:'Go light here — this is about finger and grip endurance, not heavy loading.'},
@@ -920,7 +933,23 @@ const MUSCLES = [
       {name:'DB Walking Lunge', equip:'dumbbell', strength:2, size:4, goal:'size', reps:'10–12 reps/leg', rest:'75–90s',
         desc:'A unilateral move that builds quad size while also challenging balance and stability.',
         steps:['Hold dumbbells at your sides, step forward into a lunge.','Lower until your back knee nearly touches the floor.','Push through the front foot to step into the next lunge.'],
-        note:'Great for fixing imbalances between legs since each side works independently.'}
+        note:'Great for fixing imbalances between legs since each side works independently.'},
+        {name:'45 Degree Leg Press', equip:'machine', strength:4, size:5, goal:'both', reps:'8–12 reps', rest:'2–3 min',
+  desc:'A machine-guided press on an angled sled that lets you overload the quads heavily with minimal balance demand.',
+  steps:['Sit in the machine with your back against the pad, feet shoulder-width on the platform.','Lower the sled until your knees reach about 90°.','Press back up through your heels without locking your knees hard.'],
+  note:'One of the safest ways to go very heavy on quads — great for both strength blocks and high-volume size work.'},
+{name:'Single Leg Squat', equip:'bodyweight', strength:3, size:4, goal:'both', reps:'6–10 reps/leg', rest:'90s–2 min',
+  desc:'A demanding unilateral squat (or pistol squat progression) that builds serious quad strength, balance and stability.',
+  steps:['Stand on one leg, the other extended out in front of you.','Lower down as far as your mobility allows, keeping your chest up.','Drive through your standing heel to return to the top.'],
+  note:'Use a box, band, or wall for support until you build the strength and balance to go unassisted.'},
+{name:'Wall Sit', equip:'bodyweight', strength:2, size:2, goal:'strength', reps:'30–60s hold', rest:'60–90s',
+  desc:'An isometric quad hold that builds muscular endurance and mental toughness rather than visible size.',
+  steps:['Lean your back against a wall, feet out in front, and slide down until knees are at 90°.','Hold the position, keeping your thighs parallel to the floor.','Stand back up once the hold time is complete.'],
+  note:'Great burnout finisher or warm-up activator, but not a strong tool for quad size on its own.'},
+{name:'Power Sled Push', equip:'machine', strength:4, size:3, goal:'strength', reps:'15–30m', rest:'90s–2 min',
+  desc:'A loaded sled push that builds explosive quad and hip drive with no eccentric loading, making it very joint-friendly.',
+  steps:['Load the sled and get into a low, athletic pushing position, arms extended.','Drive hard through your legs in short, powerful steps to push the sled forward.','Walk back and repeat for the target distance and rounds.'],
+  note:'Excellent for building leg power and work capacity without the joint pounding of heavy squats.'},
     ]},
 
   { id:'hamstrings', name:'Hamstrings', side:'back', pos:{t:64,l:50,w:34,h:16},
@@ -949,7 +978,15 @@ const MUSCLES = [
       {name:'Seated Leg Curl', equip:'machine', strength:1, size:5, goal:'size', reps:'10–15 reps', rest:'60–90s',
         desc:'A seated variation that stretches the hamstrings a little differently than the lying version.',
         steps:['Sit with the pad against the back of your ankles, knees at the pivot.','Curl your legs down and back.','Return slowly to the start.'],
-        note:'Alternating this with lying curls over time can help target the hamstrings from slightly different angles.'}
+        note:'Alternating this with lying curls over time can help target the hamstrings from slightly different angles.'},
+        {name:'Straight Leg Deadlift', equip:'barbell', strength:4, size:4, goal:'both', reps:'6–10 reps', rest:'2.5–4 min',
+  desc:'A stiffer-legged hip hinge than a Romanian deadlift, putting an even deeper stretch on the hamstrings.',
+  steps:['Hold a bar in front of your thighs, legs nearly straight with just a slight knee bend.','Hinge at the hips, lowering the bar down your legs as far as your hamstring flexibility allows.','Drive your hips forward to return to standing.'],
+  note:'Keep the knees nearly locked throughout — this shifts almost all the work onto the hamstrings and lower back.'},
+{name:'Standing Band Leg Curl', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'12–20 reps/leg', rest:'45–60s',
+  desc:'A standing, band-resisted leg curl that isolates the hamstring with constant tension and no equipment needed beyond a band.',
+  steps:['Anchor a resistance band around your ankle, standing tall and holding something for balance.','Curl your heel up toward your glutes against the band\'s resistance.','Lower slowly back down under control.'],
+  note:'A convenient hamstring isolation option when a leg curl machine isn\'t available.'},
     ]},
 
   { id:'hips', name:'Hips & Glutes', side:'back', pos:{t:52,l:50,w:30,h:12},
@@ -978,7 +1015,35 @@ const MUSCLES = [
       {name:'Glute Bridge March', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'10–15 reps/leg', rest:'45–60s',
         desc:'A bodyweight glute activator that also challenges core and hip stability.',
         steps:['Lie on your back, knees bent, hips raised in a bridge position.','Lift one foot off the floor, holding the bridge steady.','Alternate legs while keeping your hips level throughout.'],
-        note:'Great warm-up move to activate the glutes before heavier hip work.'}
+        note:'Great warm-up move to activate the glutes before heavier hip work.'},
+        {name:'DB Sumo Squat', equip:'dumbbell', strength:3, size:4, goal:'both', reps:'10–15 reps', rest:'90s–2 min',
+  desc:'A wide-stance squat holding a single dumbbell that emphasizes the glutes and inner thighs.',
+  steps:['Stand with feet wider than shoulder-width, toes turned out, holding a dumbbell with both hands in front of you.','Squat down between your legs, keeping your chest up.','Drive through your heels to stand back up.'],
+  note:'The wide stance shifts more of the load onto the glutes and adductors than a standard squat.'},
+{name:'Weighted Lunge Stretch', equip:'dumbbell', strength:2, size:4, goal:'size', reps:'8–12 reps/leg', rest:'75–90s',
+  desc:'A deep, static-style lunge that emphasizes a long stretch through the glute and hip flexor of the trailing leg.',
+  steps:['Step into a long lunge position, dumbbells at your sides.','Lower your back knee toward the floor, sinking deep into the stretch.','Drive through your front heel to rise, keeping the rep controlled rather than fast.'],
+  note:'Focus on depth and stretch here rather than speed — it\'s meant to build the glute through a long range of motion.'},
+{name:'Machine Hip Adduction', equip:'machine', strength:1, size:4, goal:'size', reps:'12–20 reps', rest:'45–60s',
+  desc:'Targets the inner-thigh adductors, which support hip and knee stability under heavy squatting and lunging.',
+  steps:['Sit in the machine with pads against the inside of your knees, legs spread.','Squeeze your knees together against the resistance.','Return slowly to the start under control.'],
+  note:'Often overlooked, but strengthening the adductors helps protect the knees during heavier lower-body lifts.'},
+{name:'Machine Hip Thrust', equip:'machine', strength:4, size:5, goal:'both', reps:'8–12 reps', rest:'2–3 min',
+  desc:'A machine-guided version of the barbell hip thrust that removes setup hassle while keeping tension directly on the glutes.',
+  steps:['Position your upper back against the pad, feet on the platform, hips under the load pad.','Drive your hips up until your torso is flat, squeezing the glutes hard at the top.','Lower under control without letting the weight rest at the bottom.'],
+  note:'A great alternative to the barbell version — easier to load precisely and just as effective for glute size.'},
+{name:'Machine Standing Hip Extension', equip:'machine', strength:2, size:4, goal:'size', reps:'12–15 reps/leg', rest:'60–75s',
+  desc:'A standing cable/machine kickback pattern that isolates the glute through hip extension with a strong contraction.',
+  steps:['Stand facing the machine, ankle strap or pad against the back of one leg.','Extend your leg back and up, squeezing the glute hard at the top.','Return slowly under control.'],
+  note:'Great for building mind-muscle connection with the glute since balance demand is low.'},
+{name:'Machine Lying Hip Extension', equip:'machine', strength:2, size:4, goal:'size', reps:'12–15 reps/leg', rest:'60–75s',
+  desc:'A face-down hip extension variation that isolates the glute without needing to stabilize your standing leg.',
+  steps:['Lie face down on the machine, pad positioned behind one knee or ankle.','Extend your leg up and back, squeezing the glute at the top.','Lower slowly under control.'],
+  note:'The lying position removes balance demands entirely, letting you focus purely on the glute contraction.'},
+{name:'Machine Standing Side Hip Abduction', equip:'machine', strength:1, size:4, goal:'size', reps:'12–20 reps/leg', rest:'45–60s',
+  desc:'A standing cable/machine kick-out that targets the glute medius on the side of the hip.',
+  steps:['Stand side-on to the machine, ankle strap attached to the inside leg.','Kick your leg out to the side against the resistance, keeping your torso still.','Return slowly under control.'],
+  note:'Builds hip width and stability, which also helps protect the knees during squats and lunges.'},
     ]},
 
   { id:'calves', name:'Calves', side:'back', pos:{t:86,l:50,w:24,h:14},
@@ -999,7 +1064,19 @@ const MUSCLES = [
       {name:'Single-Leg Calf Raise', equip:'bodyweight', strength:1, size:3, goal:'size', reps:'15–20 reps/leg', rest:'45–60s',
         desc:'A bodyweight, no-equipment option that still delivers a solid calf burn.',
         steps:['Stand on one foot on a step or flat ground, holding on for balance.','Lower your heel for a stretch.','Rise up onto your toes as high as you can.'],
-        note:'Simple and effective anywhere — increase reps or add a held weight as it gets easier.'}
+        note:'Simple and effective anywhere — increase reps or add a held weight as it gets easier.'},
+        {name:'DB Standing Calf Raise', equip:'dumbbell', strength:2, size:4, goal:'size', reps:'12–20 reps', rest:'60–75s',
+  desc:'A dumbbell-loaded standing raise that hits the gastrocnemius through a full stretch-to-squeeze range without needing a machine.',
+  steps:['Stand on the balls of your feet on a step or plate, holding a dumbbell in each hand at your sides.','Lower your heels down for a deep stretch.','Rise up onto your toes as high as possible, squeezing at the top.'],
+  note:'Great when a calf machine isn\'t free — hold onto something for balance and focus on a slow, controlled range.'},
+{name:'Sled Calf Press On Leg Press', equip:'machine', strength:3, size:5, goal:'both', reps:'10–15 reps', rest:'75–90s',
+  desc:'Using the leg press sled to load calves lets you handle heavier weight than most dedicated calf machines allow.',
+  steps:['Sit in the leg press with only the balls of your feet on the lower edge of the platform, legs extended.','Lower your heels for a deep stretch as the platform comes toward you.','Press through the balls of your feet to extend your ankles fully.'],
+  note:'The heavy loading potential makes this one of the best options when your calves need extra overload beyond bodyweight or standing machines.'},
+{name:'Hack Calf Raise', equip:'machine', strength:3, size:4, goal:'both', reps:'10–15 reps', rest:'75–90s',
+  desc:'Performed on the hack squat machine, this variation loads the calves from a slightly different angle than a standard standing raise.',
+  steps:['Position your shoulders under the pads of the hack squat machine, balls of your feet on the platform edge, legs straight.','Lower your heels down for a full stretch.','Press up onto your toes as high as you can, pausing briefly at the top.'],
+  note:'The fixed sled path lets you push heavier weight safely while still getting a full range of motion.'},
     ]},
     { id:'cardio', name:'Cardio', side:'front', pos:{t:50,l:50,w:60,h:60},
     blurb:'Conditioning work for endurance, heart health, and fat loss.',
@@ -1027,7 +1104,43 @@ const MUSCLES = [
       {name:'Sled Push', equip:'machine', endurance:5, goal:'endurance', reps:'20–40m', rest:'60–90s',
         desc:'A brutal mix of strength and conditioning that\'s easy on the joints since there\'s no eccentric loading.',
         steps:['Load the sled and get into a low, athletic pushing position.','Drive hard through your legs to push the sled forward.','Walk back and repeat for the target distance and rounds.'],
-        note:'One of the best tools for building work capacity without the joint pounding of running.'}
+        note:'One of the best tools for building work capacity without the joint pounding of running.'},
+        {name:'Treadmill Walk', equip:'machine', endurance:2, goal:'endurance', reps:'20–45 min', rest:'—',
+  desc:'A low-intensity steady-state cardio option that\'s easy on the joints and great for building an aerobic base.',
+  steps:['Set the treadmill to a comfortable, flat or slightly inclined walking pace.','Maintain an upright posture with a natural arm swing.','Hold the pace for the full duration, adjusting speed as needed.'],
+  note:'Ideal for recovery days or extra step count — low fatigue cost while still supporting cardiovascular health.'},
+{name:'Stationary Bike Run', equip:'machine', endurance:4, goal:'endurance', reps:'15–30 min', rest:'—',
+  desc:'A higher-effort stationary bike session that pushes your pace closer to an all-out steady effort, taxing the heart and legs.',
+  steps:['Set the bike to a moderate-to-hard resistance level.','Pedal at a fast, sustained cadence, staying seated or standing as needed.','Maintain the effort for the target duration, easing off only if form breaks down.'],
+  note:'Great low-impact way to build serious cardiovascular conditioning without pounding the joints like running does.'},
+{name:'Elliptical Cross Trainer Walk', equip:'machine', endurance:2, goal:'endurance', reps:'20–40 min', rest:'—',
+  desc:'A joint-friendly, full-body cardio motion that combines a walking stride with light arm involvement.',
+  steps:['Step onto the pedals and grip the moving handles.','Push and pull in a smooth, walking-like rhythm at an easy pace.','Maintain a steady, sustainable effort for the full duration.'],
+  note:'A good option when you want cardio volume with minimal impact on the knees and hips.'},
+{name:'Running', equip:'bodyweight', endurance:4, goal:'endurance', reps:'15–30 min', rest:'—',
+  desc:'A classic outdoor or track cardio option that builds strong aerobic conditioning and leg endurance.',
+  steps:['Start with a light jog to warm up your legs and raise your heart rate.','Settle into a steady, sustainable pace with relaxed shoulders and a tall posture.','Maintain the pace or add intervals for the target duration.'],
+  note:'Higher-impact than machine cardio, so build up mileage gradually to avoid overuse injuries.'},
+{name:'Walking', equip:'bodyweight', endurance:1, goal:'endurance', reps:'30–60 min', rest:'—',
+  desc:'The simplest form of cardio, useful for recovery, daily step totals, and general heart health with virtually no fatigue cost.',
+  steps:['Walk at a comfortable, brisk pace outdoors or on a treadmill.','Keep an upright posture and a natural arm swing.','Continue for the target time or distance.'],
+  note:'Doesn\'t interfere with recovery from lifting — a great daily habit alongside a structured training program.'},
+{name:'Elliptical Machine Walk', equip:'machine', endurance:2, goal:'endurance', reps:'20–40 min', rest:'—',
+  desc:'A steady, low-impact elliptical session at an easy pace, useful for active recovery and base aerobic work.',
+  steps:['Step onto the pedals, holding the stationary or moving handles.','Move in a smooth, controlled stride at an easy, conversational pace.','Maintain the pace for the full duration.'],
+  note:'A gentle option for days when you want cardio volume without adding to overall training fatigue.'},
+{name:'Jumping Jacks', equip:'bodyweight', endurance:2, goal:'endurance', reps:'30–60s', rest:'30–45s',
+  desc:'A simple, no-equipment full-body movement that raises the heart rate quickly and works well as a warm-up or finisher.',
+  steps:['Stand with feet together, arms at your sides.','Jump your feet out while raising your arms overhead.','Jump back to the start position and repeat at a steady rhythm.'],
+  note:'Great for warming up the whole body before a workout or adding a quick cardio burst between sets.'},
+{name:'Burpee', equip:'bodyweight', endurance:5, goal:'endurance', reps:'30–45s', rest:'45–60s',
+  desc:'A demanding full-body movement combining a squat, plank, push-up and jump — one of the toughest bodyweight conditioning tools available.',
+  steps:['Squat down and place your hands on the floor, then kick your feet back into a plank.','Perform a push-up, then jump your feet back up to your hands.','Explode upward into a jump, then immediately drop back down into the next rep.'],
+  note:'Extremely demanding on the heart and lungs — use short work periods since form breaks down fast once fatigue sets in.'},
+  {name:'Battle Ropes', equip:'bodyweight', endurance:4, goal:'endurance', reps:'20–40s', rest:'40–60s',
+  desc:'A high-intensity upper-body and core conditioning tool that spikes the heart rate fast while also building shoulder and grip endurance.',
+  steps:['Stand in an athletic stance holding one end of the rope in each hand, arms extended in front of you.','Whip the ropes up and down in alternating or double waves as hard and fast as you can.','Keep your core braced and knees soft throughout the interval.'],
+  note:'Very demanding in short bursts — great for interval-style conditioning finishers rather than long steady efforts.'}
     ]}
 ];
 
@@ -1279,6 +1392,9 @@ function buildSearchIndex(){
   return index;
 }
 const SEARCH_INDEX = buildSearchIndex();
+
+const TOTAL_EXERCISES = MUSCLES.reduce((sum, m) => sum + m.exercises.length, 0);
+document.getElementById('libCounterNum').textContent = TOTAL_EXERCISES;
 
 function runSearch(q){
   q = q.trim().toLowerCase();
