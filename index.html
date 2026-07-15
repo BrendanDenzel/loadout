@@ -181,6 +181,16 @@
 
   .goal-endurance{background:var(--accent2-soft); color:var(--accent-2);}
 
+    /* ---------- App tab strip ---------- */
+  .app-tabs{display:flex; gap:8px; padding:14px 20px 0;}
+  .app-tab{
+    display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; padding:9px 15px;
+    border-radius:999px; background:var(--surface); border:1px solid var(--border); color:var(--text-faint);
+    text-decoration:none;
+  }
+  .app-tab svg{width:14px;height:14px;}
+  .app-tab.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+
   /* ---------- Muscle grid ---------- */
   .muscle-grid{
     display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px;
@@ -402,6 +412,24 @@
       <button data-mode="dark" aria-label="Dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
     </div>
   </header>
+
+  <nav class="app-tabs">
+    <a class="app-tab active" href="index.html">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 9v6M18 9v6M4 10v4M20 10v4"/>
+    <rect x="2" y="9" width="4" height="6" rx="1"/>
+    <rect x="18" y="9" width="4" height="6" rx="1"/>
+  </svg>
+  Exercise Library
+</a>
+    <a class="app-tab" href="studies.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
+      <path d="M14 4v5h5M8 13h8M8 17h5"/>
+    </svg>
+    Research &amp; Studies
+  </a>
+</nav>
 
   <!-- HOME VIEW -->
   <main class="view active" id="view-home">

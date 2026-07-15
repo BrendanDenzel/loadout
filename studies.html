@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loadout — Research &amp; Studies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+    --bg:#F1F5FB;
+    --bg-elevated:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-2:#E7EEF9;
+    --border:#D7E1F1;
+    --text:#0F1826;
+    --text-dim:#57647A;
+    --text-faint:#8A96AB;
+    --accent:#2F6FED;
+    --accent-2:#0EA5A4;
+    --accent-soft:rgba(47,111,237,0.10);
+    --accent2-soft:rgba(14,165,164,0.12);
+    --gold:#E3A008;
+    --bad:#E4572E;
+    --bad-soft:rgba(228,87,46,0.10);
+    --shadow:0 1px 2px rgba(20,30,50,0.05), 0 10px 26px -14px rgba(24,44,90,0.18);
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0A0D14;
+      --bg-elevated:#10141D;
+      --surface:#121722;
+      --surface-2:#181F2C;
+      --border:#232B3C;
+      --text:#EAEEF7;
+      --text-dim:#98A3BA;
+      --text-faint:#616D85;
+      --accent:#5B93FF;
+      --accent-2:#2DD4CF;
+      --accent-soft:rgba(91,147,255,0.14);
+      --accent2-soft:rgba(45,212,207,0.14);
+      --gold:#F0B429;
+      --bad:#FF7A54;
+      --bad-soft:rgba(255,122,84,0.14);
+      --shadow:0 1px 2px rgba(0,0,0,0.35), 0 14px 34px -16px rgba(0,0,0,0.6);
+      color-scheme: dark;
+    }
+  }
+  html.force-light{ color-scheme: light;
+    --bg:#F1F5FB;--bg-elevated:#FFFFFF;--surface:#FFFFFF;--surface-2:#E7EEF9;--border:#D7E1F1;
+    --text:#0F1826;--text-dim:#57647A;--text-faint:#8A96AB;--accent:#2F6FED;--accent-2:#0EA5A4;
+    --accent-soft:rgba(47,111,237,0.10);--accent2-soft:rgba(14,165,164,0.12);--gold:#E3A008;
+    --bad:#E4572E;--bad-soft:rgba(228,87,46,0.10);
+    --shadow:0 1px 2px rgba(20,30,50,0.05), 0 10px 26px -14px rgba(24,44,90,0.18);
+  }
+  html.force-dark{ color-scheme: dark;
+    --bg:#0A0D14;--bg-elevated:#10141D;--surface:#121722;--surface-2:#181F2C;--border:#232B3C;
+    --text:#EAEEF7;--text-dim:#98A3BA;--text-faint:#616D85;--accent:#5B93FF;--accent-2:#2DD4CF;
+    --accent-soft:rgba(91,147,255,0.14);--accent2-soft:rgba(45,212,207,0.14);--gold:#F0B429;
+    --bad:#FF7A54;--bad-soft:rgba(255,122,84,0.14);
+    --shadow:0 1px 2px rgba(0,0,0,0.35), 0 14px 34px -16px rgba(0,0,0,0.6);
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh; transition:background .25s ease,color .25s ease;
+  }
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
+  h1,h2,h3,.display{ font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer; color:var(--text); background:none; border:none; appearance:none; -webkit-appearance:none;}
+
+  #app{max-width:1200px; margin:0 auto; padding-bottom:64px;}
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--border);
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .brand-mark svg{width:18px; height:18px;}
+  .brand-name{font-weight:700; font-size:18px;}
+  .brand-name span{color:var(--accent);}
+  .theme-toggle{display:flex; align-items:center; gap:2px; background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px;}
+  .theme-toggle button{width:30px; height:30px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-faint);}
+  .theme-toggle button.active{background:var(--surface); color:var(--accent); box-shadow:var(--shadow);}
+  .theme-toggle svg{width:15px;height:15px;}
+
+  /* ---------- App tab strip ---------- */
+  .app-tabs{display:flex; gap:8px; padding:14px 20px 0;}
+  .app-tab{
+    display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; padding:9px 15px;
+    border-radius:999px; background:var(--surface); border:1px solid var(--border); color:var(--text-faint);
+    text-decoration:none;
+  }
+  .app-tab svg{width:14px;height:14px;}
+  .app-tab.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+
+  /* ---------- Views ---------- */
+  .view{display:none; padding:0 20px;}
+  .view.active{display:block; animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .back-btn{display:none; align-items:center; gap:6px; background:none; border:none; color:var(--text-dim); font-size:14px; font-weight:600; padding:8px 0;}
+  .back-btn svg{width:16px;height:16px;}
+  .view-group .back-btn{display:inline-flex;}
+
+  .hero{padding:26px 0 18px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--accent); background:var(--accent-soft); padding:5px 10px; border-radius:999px; margin-bottom:14px;
+  }
+  .hero h1{font-size:32px; line-height:1.1; margin:0 0 10px; font-weight:700;}
+  .hero p{color:var(--text-dim); font-size:15px; max-width:560px; margin:0; line-height:1.55;}
+
+  .section-label{display:flex; align-items:baseline; justify-content:space-between; margin:28px 0 14px;}
+  .section-label h2{font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-faint); margin:0;}
+
+  /* ---------- Search ---------- */
+  .search-wrap{position:relative; margin-top:20px; max-width:520px;}
+  .search-icon{position:absolute; left:14px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--text-faint); pointer-events:none;}
+  .search-input{
+    width:100%; padding:13px 42px; border-radius:14px; background:var(--surface); border:1px solid var(--border);
+    color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px; outline:none; box-shadow:var(--shadow); transition:border-color .15s ease;
+  }
+  .search-input:focus{border-color:var(--accent);}
+  .search-input::placeholder{color:var(--text-faint);}
+  .search-clear{position:absolute; right:8px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:50%; border:none; background:var(--surface-2); color:var(--text-dim); display:flex; align-items:center; justify-content:center;}
+  .search-clear svg{width:13px; height:13px;}
+  .search-results{
+    display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; z-index:30; background:var(--bg-elevated);
+    border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); max-height:380px; overflow-y:auto; padding:8px;
+  }
+  .search-results.show{display:block;}
+  .search-group-label{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint); padding:8px 10px 4px;}
+  .search-result-row{display:flex; align-items:center; gap:10px; width:100%; padding:9px 10px; border-radius:10px; background:none; border:none; text-align:left; color:var(--text); font-size:13.5px;}
+  .search-result-row:hover{background:var(--surface-2);}
+  .search-result-thumb{width:32px; height:32px; border-radius:8px; background:var(--surface-2); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; color:var(--accent);}
+  .search-result-thumb svg{width:16px;height:16px;}
+  .search-result-name{font-weight:600;}
+  .search-result-sub{font-size:11.5px; color:var(--text-faint); margin-top:1px;}
+  .search-empty{padding:16px 10px; font-size:13px; color:var(--text-faint); text-align:center;}
+
+  .lib-counter{
+    display:inline-flex; align-items:center; gap:7px; margin-top:12px; font-size:12.5px; font-weight:600; color:var(--text-dim);
+    background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:7px 13px; box-shadow:var(--shadow);
+  }
+  .lib-counter svg{width:14px; height:14px; color:var(--accent); flex-shrink:0;}
+  .lib-counter span{color:var(--text); font-family:'JetBrains Mono',monospace; font-weight:700;}
+
+  /* ---------- Topic grid ---------- */
+  .topic-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px;}
+  @media (min-width:640px){ .topic-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:960px){ .topic-grid{grid-template-columns:repeat(4,1fr);} }
+
+  .t-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px 14px 14px;
+    text-align:left; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:12px; transition:transform .18s ease, border-color .18s ease;
+  }
+  .t-card:hover{transform:translateY(-3px); border-color:var(--accent);}
+  .t-card:active{transform:translateY(0px) scale(.98);}
+  .t-figure{
+    position:relative; aspect-ratio:1.5/1; border-radius:var(--radius-md); background:linear-gradient(150deg,var(--accent-soft),var(--accent2-soft));
+    display:flex; align-items:center; justify-content:center; color:var(--accent); overflow:hidden;
+  }
+  .t-figure svg{width:34px;height:34px;}
+  .t-name{font-weight:700; font-size:15px;}
+  .t-count{font-size:12px; color:var(--text-faint);}
+
+  /* ---------- Topic view ---------- */
+  .group-hero{display:flex; gap:16px; align-items:center; padding:18px 0 8px;}
+  .group-figure{
+    width:76px; height:76px; border-radius:20px; background:linear-gradient(150deg,var(--accent-soft),var(--accent2-soft)); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; color:var(--accent); flex-shrink:0;
+  }
+  .group-figure svg{width:34px;height:34px;}
+  .group-title h1{font-size:24px; margin:0 0 4px;}
+  .group-title p{margin:0; color:var(--text-dim); font-size:13.5px; max-width:480px;}
+
+  .filter-row{display:flex; gap:8px; margin:24px 0 14px; overflow-x:auto; padding-bottom:2px;}
+  .chip{flex-shrink:0; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:999px; background:var(--surface); border:1px solid var(--border); color:var(--text-dim);}
+  .chip.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+
+  .st-grid{display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:30px;}
+  @media (min-width:640px){ .st-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (min-width:1000px){ .st-grid{grid-template-columns:repeat(3,1fr);} }
+
+  .st-card{
+    display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    overflow:hidden; text-align:left; box-shadow:var(--shadow); padding:0;
+  }
+  .st-card:hover{border-color:var(--accent);}
+  .st-thumb{position:relative; aspect-ratio:16/9; background:var(--surface-2); overflow:hidden; padding:10px 12px;}
+  .st-thumb svg{width:100%; height:100%;}
+  .st-body{padding:14px 16px 16px;}
+  .st-kicker{display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap;}
+  .type-tag{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 8px; border-radius:6px; background:var(--accent-soft); color:var(--accent);}
+  .year-tag{font-size:10.5px; color:var(--text-faint); font-family:'JetBrains Mono',monospace;}
+  .st-name{font-weight:700; font-size:15px; margin-bottom:6px; line-height:1.3;}
+  .st-sub{font-size:12.5px; color:var(--text-dim); line-height:1.5; margin-bottom:10px;}
+  .st-foot{display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid var(--border);}
+  .evid{display:flex; align-items:center; gap:5px;}
+  .evid-label{font-size:9px; color:var(--text-faint); font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+  .stars{display:flex; gap:1px;}
+  .stars svg{width:11px; height:11px;}
+  .star-filled{fill:var(--gold); stroke:var(--gold);}
+  .star-empty{fill:none; stroke:var(--border); stroke-width:1.5;}
+  .n-tag{font-size:11px; color:var(--text-faint); font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(6,10,20,0.55); backdrop-filter:blur(3px); display:none; align-items:flex-end; justify-content:center; z-index:100;}
+  .modal-backdrop.show{display:flex; animation:fadein .2s ease;}
+  @media (min-width:720px){ .modal-backdrop{align-items:center;} }
+  .modal{
+    background:var(--bg-elevated); width:100%; max-width:680px; max-height:90vh; overflow-y:auto; border-radius:24px 24px 0 0;
+    padding:22px 22px 34px; position:relative; border:1px solid var(--border); border-bottom:none;
+  }
+  @media (min-width:720px){ .modal{border-radius:24px; border-bottom:1px solid var(--border); max-height:86vh;} }
+  .modal-handle{width:36px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 16px;}
+  @media (min-width:720px){ .modal-handle{display:none;} }
+  .modal-close{position:absolute; top:18px; right:18px; width:32px; height:32px; border-radius:50%; background:var(--surface-2); border:none; color:var(--text-dim); display:flex; align-items:center; justify-content:center; z-index:2;}
+  .modal-close svg{width:15px;height:15px;}
+
+  .modal-kicker{display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; padding-right:34px;}
+  .modal-head h2{font-size:21px; margin:0 0 8px; line-height:1.25; padding-right:34px;}
+  .modal-authors{font-size:12.5px; color:var(--text-faint); margin-bottom:18px;}
+  .modal-authors a{color:var(--accent); font-weight:600; text-decoration:none;}
+  .modal-authors a:hover{text-decoration:underline;}
+
+  .info-box{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:16px;}
+  .info-box h4{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint); margin:0 0 8px; font-weight:700; display:flex; align-items:center; gap:6px;}
+  .info-box h4 svg{width:13px;height:13px; color:var(--accent);}
+  .info-box p{margin:0; font-size:13.5px; line-height:1.6; color:var(--text);}
+  .info-box.tint{background:var(--accent-soft); border-color:transparent;}
+  .info-box.take{background:linear-gradient(160deg,var(--accent-soft),var(--accent2-soft)); border-color:transparent;}
+
+  .stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px;}
+  .stat-chip{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 10px; text-align:center;}
+  .stat-chip .k{font-size:9.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); font-weight:700; margin-bottom:4px;}
+  .stat-chip .v{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13.5px; color:var(--text);}
+
+  .chart-box{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px 14px 12px; margin-bottom:16px;}
+  .chart-box svg{width:100%; height:auto; display:block;}
+  .chart-note{font-size:11.5px; color:var(--text-faint); line-height:1.5; margin:10px 2px 0; font-style:italic;}
+
+  .results-list{list-style:none; margin:0 0 16px; padding:0; display:flex; flex-direction:column; gap:9px;}
+  .results-list li{display:flex; gap:10px; font-size:13.5px; line-height:1.55; color:var(--text);}
+  .r-mark{width:20px; height:20px; border-radius:6px; background:var(--accent2-soft); color:var(--accent-2); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;}
+  .r-mark svg{width:12px;height:12px;}
+
+  .cite-box{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--surface-2); border:1px dashed var(--border);
+    border-radius:var(--radius-sm); padding:11px 14px; margin-top:4px; flex-wrap:wrap;
+  }
+  .cite-text{font-size:11.5px; color:var(--text-dim); line-height:1.5;}
+  .cite-link{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--accent); text-decoration:none;
+    background:var(--accent-soft); padding:7px 12px; border-radius:999px; flex-shrink:0;
+  }
+  .cite-link svg{width:12px;height:12px;}
+
+  .compare-wrap{display:flex; flex-direction:column; gap:8px; margin-bottom:16px;}
+  .compare-row{display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:stretch;}
+  .compare-row .lbl{grid-column:1 / -1; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-faint); margin-top:6px;}
+  .compare-cell{border-radius:var(--radius-sm); padding:11px 12px; border:1px solid var(--border); background:var(--surface-2); font-size:12.5px; line-height:1.4;}
+  .compare-cell .cc-title{font-weight:700; font-size:12.5px; margin-bottom:3px; display:flex; align-items:center; gap:5px;}
+  .compare-cell.win{background:var(--accent-soft); border-color:var(--accent); color:var(--text);}
+  .compare-cell.win .cc-title{color:var(--accent);}
+  .compare-cell .cc-title svg{width:13px;height:13px;}
+
+  .scale-table{width:100%; border-collapse:collapse; margin-bottom:16px; font-size:12.5px;}
+  .scale-table th{text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); padding:6px 8px; border-bottom:1px solid var(--border);}
+  .scale-table td{padding:7px 8px; border-bottom:1px solid var(--border); color:var(--text);}
+  .scale-table tr:last-child td{border-bottom:none;}
+  .scale-table .rpe-num{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--accent);}
+
+  footer{text-align:center; padding:30px 20px 10px; color:var(--text-faint); font-size:12px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h2M18 12h2M6 9v6M18 9v6M8 12h8"/></svg>
+      </div>
+      <div class="brand-name">Load<span>out</span></div>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <button data-mode="light" aria-label="Light mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button data-mode="system" aria-label="System"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+      <button data-mode="dark" aria-label="Dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+  </header>
+
+  <nav class="app-tabs">
+    <a class="app-tab" href="index.html">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 9v6M18 9v6M4 10v4M20 10v4"/>
+    <rect x="2" y="9" width="4" height="6" rx="1"/>
+    <rect x="18" y="9" width="4" height="6" rx="1"/>
+  </svg>
+  Exercise Library
+</a>
+<a class="app-tab active" href="studies.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
+      <path d="M14 4v5h5M8 13h8M8 17h5"/>
+    </svg>
+    Research &amp; Studies
+  </a>
+</nav>
+
+  <!-- HOME VIEW -->
+  <main class="view active" id="view-home">
+    <button class="back-btn"></button>
+    <section class="hero">
+      <span class="eyebrow">Research Library</span>
+      <h1>The science behind<br>every set.</h1>
+      <p>Real studies on lots of training topics broken down into easy summaries, methods, results so you can see the evidence instead of just trusting a claim.</p>
+    </section>
+
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="globalSearch" class="search-input" placeholder="Search studies or topics…" autocomplete="off">
+      <button class="search-clear" id="searchClear" aria-label="Clear search" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="lib-counter" id="libCounter">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 4v5h5"/></svg>
+      <span id="libCounterNum">0</span> studies across <span id="libCounterTopics">0</span> topics
+    </div>
+
+    <div class="section-label"><h2>Topics</h2></div>
+    <div class="topic-grid" id="topicGrid"></div>
+    <footer>Tap a topic to see every study behind it, or search for a specific question. Every card links back to the original paper on PubMed.</footer>
+  </main>
+
+  <!-- TOPIC VIEW -->
+  <main class="view" id="view-topic">
+    <button class="back-btn" id="backBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      All topics
+    </button>
+
+    <div class="group-hero">
+      <div class="group-figure" id="groupFigure"></div>
+      <div class="group-title">
+        <h1 id="groupName"></h1>
+        <p id="groupSub"></p>
+      </div>
+    </div>
+
+    <div class="filter-row" id="filterRow"></div>
+    <div class="st-grid" id="stList"></div>
+  </main>
+
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="modalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============ ICONS ============ */
+const ICONS = {
+  protein: `<path d="M8 3c-2 2-2 5 0 7l6 6c2 2 5 2 7 0M8 3c2-2 5-2 7 0l6 6c2 2 2 5 0 7"/><path d="M6 18l-2 2M9 15l-2 2M12 12l-2 2"/>`,
+  frequency: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>`,
+  rest: `<circle cx="12" cy="12" r="9"/><path d="M9 9v6M15 9v6"/>`,
+  regain: `<path d="M4 19V9l8-6 8 6v10"/><path d="M9 19v-6h6v6"/>`,
+  sleep: `<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>`,
+  reps: `<path d="M4 12h2M18 12h2M6 8v8M18 8v8M8 12h8"/>`,
+  fiber: `<path d="M12 3c4 3 6 6 6 10a6 6 0 0 1-12 0c0-4 2-7 6-10z"/><path d="M12 8v9"/>`,
+  magnesium: `<path d="M12 2v20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/><circle cx="12" cy="12" r="9"/>`,
+  failure: `<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>`,
+  flask: `<path d="M9 3h6M10 3v6l-6 10a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-6-10V3"/>`,
+  meta: `<rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/>`,
+  check: `<path d="M20 6 9 17l-5-5"/>`,
+  link: `<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>`,
+  chart: `<path d="M4 20V4M4 20h16"/><rect x="7" y="12" width="3" height="8"/><rect x="12.5" y="7" width="3" height="13"/><rect x="18" y="15" width="3" height="5"/>`,
+  book: `<path d="M4 19.5V6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v14"/><path d="M6 4h13v14H6a2 2 0 0 0 0 4h13"/>`
+};
+function iconSvg(key, cls){ return `<svg class="${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[key]||ICONS.flask}</svg>`; }
+
+const TYPE_LABEL = { rct:'RCT', meta:'Meta-analysis', review:'Review', cohort:'Cohort study', mech:'Mechanistic study' };
+const TYPE_EVID = { meta:5, rct:4, cohort:4, review:3, mech:3 };
+
+/* ============ CHART RENDERERS ============ */
+function barChart(items, opts){
+  opts = opts || {};
+  const W = 560, H = opts.height || 220, padL = 34, padR = 14, padT = 18, padB = 34;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const max = opts.max || Math.max(...items.map(i=>i.value)) * 1.15;
+  const n = items.length;
+  const gap = innerW / n * 0.32;
+  const bw = (innerW / n) - gap;
+  let bars = '', labels = '';
+  items.forEach((it,i)=>{
+    const x = padL + i*(innerW/n) + gap/2;
+    const bh = Math.max(3, (it.value/max) * innerH);
+    const y = padT + (innerH - bh);
+    const color = it.color || (i%2===0 ? 'var(--accent)' : 'var(--accent-2)');
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="7" fill="${color}"/>`;
+    bars += `<text x="${(x+bw/2).toFixed(1)}" y="${(y-8).toFixed(1)}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="12" fill="var(--text)">${it.display!=null?it.display:it.value}</text>`;
+    labels += `<text x="${(x+bw/2).toFixed(1)}" y="${H-14}" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="var(--text-faint)">${it.label}</text>`;
+  });
+  const baseline = padT + innerH;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <line x1="${padL}" y1="${baseline}" x2="${W-padR}" y2="${baseline}" stroke="var(--border)" stroke-width="1.5"/>
+    ${bars}${labels}
+  </svg>`;
+}
+
+function barChartMini(items){
+  const W=220, H=90, padB=8; const max = Math.max(...items.map(i=>i.value))*1.1;
+  const n=items.length, gap= (W/n)*0.28, bw=(W/n)-gap;
+  let bars='';
+  items.forEach((it,i)=>{
+    const x=i*(W/n)+gap/2; const bh=Math.max(4,(it.value/max)*(H-padB));
+    const y=(H-padB)-bh; const color= it.color || (i%2===0?'var(--accent)':'var(--accent-2)');
+    bars+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="5" fill="${color}"/>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="${H-padB}" x2="${W}" y2="${H-padB}" stroke="var(--border)" stroke-width="1.5"/>${bars}
+  </svg>`;
+}
+
+function lineTrendMini(rising){
+  const W=220,H=90;
+  const pts = rising ? "6,74 55,60 104,42 153,26 214,16" : "6,20 60,34 115,46 165,54 214,60";
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${pts.split(' ').pop().split(',')[0]}" cy="${pts.split(' ').pop().split(',')[1]}" r="5" fill="var(--accent-2)"/>
+  </svg>`;
+}
+
+function flowMini(){
+  return `<svg viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="10" width="60" height="24" rx="7" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+    <path d="M40 34v10" stroke="var(--text-faint)" stroke-width="2" marker-end="url(#a1)"/>
+    <rect x="80" y="34" width="60" height="24" rx="7" fill="var(--accent2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/>
+    <path d="M110 58v10" stroke="var(--text-faint)" stroke-width="2"/>
+    <rect x="150" y="58" width="60" height="24" rx="7" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+  </svg>`;
+}
+
+function timelineMini(){
+  return `<svg viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="38" width="60" height="16" rx="8" fill="var(--accent)"/>
+    <rect x="74" y="38" width="90" height="16" rx="8" fill="var(--border)"/>
+    <rect x="168" y="38" width="42" height="16" rx="8" fill="var(--accent-2)"/>
+  </svg>`;
+}
+
+function compareMini(){
+  return `<svg viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="14" width="90" height="62" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+    <rect x="120" y="14" width="90" height="62" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+    <path d="M155 38 165 48 180 30" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+function scaleMini(){
+  return `<svg viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+    ${[0,1,2,3,4,5].map(i=>`<rect x="${10+i*35}" y="${70-(i+2)*9}" width="24" height="${(i+2)*9}" rx="4" fill="${i>=4?'var(--accent)':'var(--accent2-soft)'}"/>`).join('')}
+  </svg>`;
+}
+
+function riskMeter(baseline, reduced, opts){
+  opts = opts||{};
+  const W=560,H=150,padL=110,padR=20,barH=34;
+  const innerW = W-padL-padR;
+  const y1=32, y2=y1+barH+26;
+  const w1 = innerW;
+  const w2 = innerW * (reduced/baseline);
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <text x="0" y="${y1+barH/2+4}" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="var(--text-dim)">${opts.label1||'Lower intake'}</text>
+    <rect x="${padL}" y="${y1}" width="${w1.toFixed(1)}" height="${barH}" rx="9" fill="var(--border)"/>
+    <text x="${padL+w1+8}" y="${y1+barH/2+4}" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="var(--text)">${opts.v1||'1.00'}</text>
+    <text x="0" y="${y2+barH/2+4}" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="var(--text-dim)">${opts.label2||'Higher intake'}</text>
+    <rect x="${padL}" y="${y2}" width="${w2.toFixed(1)}" height="${barH}" rx="9" fill="var(--accent)"/>
+    <text x="${padL+w2+8}" y="${y2+barH/2+4}" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="var(--accent)">${opts.v2||reduced}</text>
+  </svg>`;
+}
+
+/* ============ DATA ============ */
+const TOPICS = [
+  { id:'protein', name:'Protein Per Meal', icon:'protein',
+    q:'How much protein can your body absorb in one sitting?',
+    blurb:'The "20–30g and the rest is wasted" rule, tested with isotope tracers and real feeding trials.',
+    studies:[
+      { id:'p1', type:'rct', year:2023, journal:'Cell Reports Medicine', n:'n = 12, crossover', pmid:'38118410',
+        authors:'Trommelen et al.',
+        title: 'Single 100g protein dose keeps building muscle for 12+ hours',
+        sub:'Isotope-tracer trial shows the "anabolic window" closes much later than the old 20–30g rule suggests.',
+        summary:'This trial directly tested the old idea that muscles can only "use" about 20–30g of protein per meal and that anything more is simply burned off. Twelve healthy young men did a bout of resistance exercise, then on separate visits drank a shake containing 0g, 25g, or 100g of protein.',
+        method:'Researchers used a "quadruple isotope tracer" technique (four different labeled tracers infused into the blood and mixed into the protein drink) to follow amino acids in real time as they moved from the gut into the bloodstream and then into muscle tissue, for 12 hours after each drink.',
+        results:[
+          'Muscle protein synthesis rose in a clear dose-dependent way: bigger drink, bigger and longer response.',
+          'The 100g dose produced a larger and far more prolonged anabolic response than the 25g dose — still measurably elevated more than 12 hours later, the study\'s full observation window.',
+          'Whole-body protein breakdown and amino-acid burning for fuel barely changed even with the very large 100g dose — the extra protein wasn\'t simply wasted.',
+        ],
+        takeaway:'There\'s no hard per-meal ceiling. A large protein meal keeps feeding muscle repair for half a day or more, so the classic "only 20–30g per sitting" advice is likely too conservative, especially after a hard training session.',
+        chart:{kind:'bar', title:'Relative anabolic response by dose', unit:'', items:[
+          {label:'0 g', value:0.3, display:'—'},
+          {label:'25 g', value:1.6, display:'+'},
+          {label:'100 g', value:3.4, display:'++'},
+        ], note:'Bar heights illustrate the reported dose-response direction (bigger dose → bigger, longer-lasting response); the paper reports statistical significance and timing rather than a single fold-change number.'}
+      },
+      { id:'p2', type:'rct', year:2016, journal:'Physiological Reports', n:'young, resistance-trained men', pmid:'27511985',
+        authors:'Macnaughton et al.',
+        title:'40g builds more muscle protein than 20g after a full-body workout',
+        sub:'Whole-body training changes the math on the classic "20–25g per meal" guideline.',
+        summary:'Most of the original "20–25g is enough" studies only trained a single muscle group (like the legs). This trial asked what happens after training the *whole* body, which recruits far more total muscle mass and may need more protein to fully saturate the repair response.',
+        method:'Resistance-trained men performed a whole-body workout, then drank either 20g or 40g of whey protein isolate. Muscle protein synthesis was tracked afterward using amino-acid tracers, comparing men with lower versus higher lean body mass.',
+        results:[
+          'Muscle protein synthesis was significantly higher after 40g than after 20g of whey protein.',
+          'The advantage of the larger dose was most apparent in participants with more lean body mass, bigger muscles, bigger protein requirement.',
+          'This challenges the idea of one universal per-meal protein ceiling that applies regardless of training volume or body size.',
+        ],
+        takeaway:'The "20–25g maximum" figure came mostly from single-limb studies. Train your whole body in one session, or carry more muscle mass, and the useful dose per meal likely climbs — 40g outperformed 20g here.',
+        chart:{kind:'bar', title:'Muscle protein synthesis response', items:[
+          {label:'20 g whey', value:1.0, display:'baseline'},
+          {label:'40 g whey', value:1.5, display:'higher'},
+        ], note:'Bars illustrate the direction and statistical significance reported (40g significantly greater than 20g); an exact fold-change was not given in the abstract.'}
+      },
+      { id:'p3', type:'rct', year:2009, journal:'American Journal of Clinical Nutrition', n:'n = 8, crossover', pmid:'19776143',
+        authors:'Soeters et al.',
+        title:'Spreading meals out didn\'t change protein handling',
+        sub:'Two weeks of intermittent fasting vs. a standard eating pattern, same total protein, different timing.',
+        summary:'This study wasn\'t about a single meal, but about whether *how* you distribute your eating across the day changes protein and energy metabolism. Eight lean, healthy volunteers followed two weeks of intermittent fasting and two weeks of a standard diet, in random order, with total calories and protein matched.',
+        method:'Researchers measured glucose, fat (glycerol), and protein (valine) turnover in the fasted state and during an insulin clamp, comparing the two eating patterns in the same people.',
+        results:[
+          'Whole-body glucose, fat, and protein metabolism were essentially unchanged between the intermittent-fasting pattern and the standard eating pattern.',
+          'Protein turnover (the balance of building up and breaking down body protein) did not differ meaningfully by meal pattern when total intake was matched.',
+        ],
+        takeaway:'When total daily protein and calories are equal, compressing your eating into fewer, larger meals doesn\'t appear to hurt (or help) whole-body protein balance — supporting the idea that total daily protein matters more than rigid per-meal caps.',
+        chart:{kind:'bar', title:'Whole-body protein balance by eating pattern', items:[
+          {label:'Standard\n3 meals', value:1.0, display:'—'},
+          {label:'Intermittent\nfasting', value:1.0, display:'—'},
+        ], note:'Both bars are equal by design — the study\'s key finding was no significant difference between patterns.'}
+      },
+      { id:'p4', type:'rct', year:2007, journal:'American Journal of Clinical Nutrition', n:'n = 27, 8 weeks', pmid:'17413096',
+        authors:'Stote et al.',
+        title:'3 meals a day vs. 1 meal a day, same calories',
+        sub:'A controlled trial of meal frequency without calorie restriction in healthy adults.',
+        summary:'This trial tested whether eating fewer, larger meals (as few as one per day) changes health markers compared to the standard three-meals pattern, when total daily calories are kept identical.',
+        method:'Healthy, normal-weight, middle-aged adults ate either 3 meals per day or all their food in 1 meal per day, for 8 weeks, with total daily calories held constant between conditions in a randomized crossover design.',
+        results:[
+          'Eating one large meal a day did not require eating less overall — total calories were matched by design.',
+          'The single-meal pattern was linked to more reported hunger and small shifts in some metabolic markers compared with the standard 3-meal pattern.',
+          'Because protein and calories were matched across conditions, this supports total daily intake — not the number of meals — as the more important lever.',
+        ],
+        takeaway:'Meal frequency itself is mostly a matter of preference and practicality, not a hard rule for protein utilization — but cramming everything into one sitting comes with a hunger cost for most people.',
+        chart:{kind:'compare', rows:[
+          {label:'Total daily calories & protein', left:'3 meals: matched', right:'1 meal: matched', winner:null},
+          {label:'Reported hunger', left:'3 meals: lower', right:'1 meal: higher', winner:'left'},
+        ]}
+      },
+    ]
+  },
+  { id:'frequency', name:'Training Frequency', icon:'frequency',
+    q:'Should you train a muscle group multiple times a week?',
+    blurb:'A 2026 meta-regression of 67 studies untangles weekly volume from how often you hit a muscle.',
+    studies:[
+      { id:'f1', type:'meta', year:2026, journal:'Sports Medicine', n:'67 studies, 2,058 participants', pmid:'41343037',
+        authors:'Pelland et al.',
+        title:'More weekly sets grow more muscle but with steadily diminishing returns',
+        sub:'The largest dose-response analysis yet of weekly training volume and frequency.',
+        summary:'This is the most comprehensive dose-response analysis to date on two of the most argued-about training variables: how many total sets you do per muscle per week, and how many separate sessions you spread them across.',
+        method:'The authors pooled 67 resistance-training studies (2,058 participants) and used meta-regression — modeling hypertrophy and strength outcomes as a continuous function of weekly set volume and training frequency, rather than just comparing "high vs. low" groups.',
+        results:[
+          'Weekly set volume showed a clear positive relationship with muscle growth, with essentially 100% posterior probability that more sets help — but with clearly diminishing returns as volume climbs.',
+          'At typical training volumes (~12 sets/week per muscle), each additional set was associated with roughly a 0.24% further increase in muscle growth — a real but shrinking benefit.',
+          'Training frequency (spreading the same volume across more sessions per week) had a much bigger effect on strength gains than on muscle growth itself.',
+        ],
+        takeaway:'Total weekly volume is the main driver of muscle growth, and it keeps helping well past what most lifters do — but each extra set buys you less than the last. Training a muscle 2–3x/week is mainly useful as a practical way to fit in more total volume without overly long sessions, and it especially helps strength.',
+        chart:{kind:'line', title:'Muscle growth vs. weekly sets per muscle (diminishing returns)', rising:true,
+          note:'Illustrative curve based on the meta-regression\'s reported pattern: growth rises with weekly volume but with a shrinking marginal benefit per set (~0.24% extra growth per additional set at typical volumes around 12 sets/week).'}
+      },
+    ]
+  },
+  { id:'rest', name:'Rest Between Sets', icon:'rest',
+    q:'How long should you rest between sets?',
+    blurb:'A head-to-head of 1-minute vs. 3-minute rest periods in experienced lifters.',
+    studies:[
+      { id:'r1', type:'rct', year:2016, journal:'Journal of Strength and Conditioning Research', n:'n = 21, 8 weeks', pmid:'26605807',
+        authors:'Schoenfeld et al.',
+        title:'3-minute rest periods beat 1-minute rest for both strength and size',
+        sub:'Short "hypertrophy-style" rest intervals didn\'t out-grow long "strength-style" rest in this trial.',
+        summary:'Bodybuilding folklore often recommends short rest periods (around 1 minute) to maximize the "pump," while powerlifting programs use long rest (2–3+ minutes) to maximize strength. This study put both approaches head-to-head with everything else held identical.',
+        method:'Twenty-one resistance-trained young men trained 3 full-body sessions a week for 8 weeks — 3 sets of 8–12 reps across 7 exercises — differing only in rest interval: 1 minute (SHORT) or 3 minutes (LONG). Strength (1RM squat & bench), muscular endurance, and muscle thickness (ultrasound) were measured before and after.',
+        results:[
+          'Back squat and bench press 1RM strength increased significantly more in the LONG (3-minute) group than the SHORT (1-minute) group.',
+          'Quadriceps (anterior thigh) muscle thickness increased significantly more with LONG rest, with a similar trend in the triceps.',
+          'Local muscular endurance improved in both groups by a similar amount — short rest didn\'t have a unique endurance advantage here.',
+        ],
+        takeaway:'For lifters chasing both strength and size on compound lifts, 2–3 minutes of rest looks like a better default than rushing sets at 60 seconds — despite the popular idea that short rest is better for "the pump."',
+        chart:{kind:'compare', rows:[
+          {label:'Squat & bench 1RM strength', left:'1-min rest', right:'3-min rest: significantly greater', winner:'right'},
+          {label:'Quad muscle thickness', left:'1-min rest', right:'3-min rest: significantly greater', winner:'right'},
+          {label:'Local muscular endurance', left:'1-min rest: improved', right:'3-min rest: improved', winner:null},
+        ]}
+      },
+    ]
+  },
+  { id:'regain', name:'Muscle Memory', icon:'regain',
+    q:'How long does it take to regain muscle once you\'ve lost it?',
+    blurb:'A classic detraining-and-retraining trial on why "muscle memory" is a real physiological effect.',
+    studies:[
+      { id:'m1', type:'rct', year:1991, journal:'Journal of Applied Physiology', n:'n = 6 (+7 untrained controls)', pmid:'1827108',
+        authors:'Staron et al.',
+        title:'Six weeks of retraining rebuilt what took 30+ weeks to lose',
+        sub:'A landmark detraining study behind the idea of "muscle memory."',
+        summary:'This is one of the earliest and most-cited studies on what happens when trained muscle goes untrained for a long stretch, and then gets trained again — the physiological basis for the popular idea of "muscle memory."',
+        method:'Women who had completed a 20-week heavy-resistance leg-training program then stopped training entirely for 30–32 weeks (detraining). They then retrained for 6 weeks, and their strength and muscle fiber size were compared against untrained women doing the same 6-week program for the first time.',
+        results:[
+          'The initial 20-week program produced clear increases in strength and in the size of all three major muscle fiber types.',
+          'During 30–32 weeks of complete detraining, some of that strength and fiber size was lost — but not all of it; fiber size and strength stayed above pre-training levels.',
+          'Just 6 weeks of retraining produced significantly greater increases in fast-twitch fiber size than the detraining values, rapidly closing the gap back toward the original trained state.',
+        ],
+        takeaway:'Muscle you\'ve built isn\'t gone for good after a layoff — a chunk of the adaptation lingers even through months off, and retraining brings it back much faster than it took to build the first time.',
+        chart:{kind:'timeline', title:'Train → detrain → retrain', note:'Phase 1: 20 weeks of training builds strength & fiber size. Phase 2: 30–32 weeks of complete detraining causes partial (not total) loss. Phase 3: just 6 weeks of retraining rapidly rebuilds fiber size — faster than the original build.'}
+      },
+    ]
+  },
+  { id:'sleep', name:'Sleep', icon:'sleep',
+    q:'How much does sleep matter?',
+    blurb:'Cutting sleep while dieting doesn\'t just make you tired — it changes what kind of weight you lose.',
+    studies:[
+      { id:'s1', type:'rct', year:2010, journal:'Annals of Internal Medicine', n:'n = 10, crossover', pmid:'20921542',
+        authors:'Nedeltcheva et al.',
+        title:'Short sleep cut fat loss by more than half during a diet',
+        sub:'Same calorie deficit, same 14 days — but sleep-restricted dieters lost muscle instead of fat.',
+        summary:'This tightly controlled trial asked a simple but important question: if two people eat the exact same calorie-restricted diet for the same two weeks, does how much they sleep change *what kind* of weight they lose?',
+        method:'Ten overweight adults completed two separate 14-day periods of identical moderate calorie restriction — once with 8.5 hours of nighttime sleep opportunity, once with only 5.5 hours — in a randomized crossover design, with body composition, hunger, and hormones measured throughout.',
+        results:[
+          'With 8.5 hours of sleep, participants lost about 1.4 kg of body fat over 14 days on the reduced-calorie diet.',
+          'With only 5.5 hours of sleep on the identical diet, fat loss dropped to about 0.6 kg — the fraction of weight lost as fat fell by more than half.',
+          'Total weight loss was similar between conditions — the sleep-restricted group simply lost more muscle (fat-free mass) instead of fat to make up the difference.',
+          'Sleep restriction also increased hunger and altered hormones tied to appetite and energy use.',
+        ],
+        takeaway:'Cutting sleep while dieting doesn\'t just leave you tired the same calorie deficit shifts from burning fat to burning muscle. If body composition matters to you, protecting sleep is as much a "diet" variable as food is.',
+        chart:{kind:'bar', title:'Body fat lost over 14 days on an identical calorie deficit', items:[
+          {label:'8.5 h sleep', value:1.4, display:'1.4 kg'},
+          {label:'5.5 h sleep', value:0.6, display:'0.6 kg'},
+        ], note:'Values as reported in the study: fat loss fell from 1.4 kg to 0.6 kg (about a 55% reduction) when nightly sleep was cut from 8.5 to 5.5 hours, with total weight loss held similar between conditions.'}
+      },
+    ]
+  },
+  { id:'reps', name:'Rep Ranges', icon:'reps',
+    q:'How many reps are best for muscle growth?',
+    blurb:'Heavy-and-low vs. light-and-high — what actually differs, and what doesn\'t.',
+    studies:[
+      { id:'rp1', type:'meta', year:2017, journal:'Journal of Strength and Conditioning Research', n:'21 studies, meta-analysis', pmid:'28834797',
+        authors:'Schoenfeld, Grgic, Ogborn & Krieger',
+        title:'Heavy or light — muscle grows about the same either way',
+        sub:'A meta-analysis of 21 studies comparing low-load/high-rep training against high-load/low-rep training.',
+        summary:'This meta-analysis pooled every available trial comparing "heavy, low-rep" training against "light, high-rep" training on muscle growth, to settle whether one loading style has a real hypertrophy edge.',
+        method:'Twenty-one studies comparing resistance training performed with high loads (generally >60% of 1RM) against low loads (<60% of 1RM), all training to or near failure, were combined statistically to calculate a pooled effect size for muscle cross-sectional area.',
+        results:[
+          'There was no meaningful difference in muscle growth between high-load and low-load training (effect size difference of just 0.03, a trivial gap statistically indistinguishable from zero).',
+          'Strength gains (1RM) were significantly greater with high-load training — heavier weights build more maximal strength even though the muscle-growth outcome is similar.',
+        ],
+        takeaway:'If your only goal is bigger muscles, a wide range of rep counts works about equally well, as long as sets are taken close to failure. If you also want to get stronger on the bar, heavier loads still have the edge.',
+        chart:{kind:'bar', title:'Muscle growth effect size: high-load vs. low-load (pooled)', items:[
+          {label:'High load\n(low reps)', value:0.03+0.5, display:'≈ equal'},
+          {label:'Low load\n(high reps)', value:0.5, display:'≈ equal'},
+        ], note:'The reported pooled effect-size difference for hypertrophy was just 0.03 (95% CI −0.16 to 0.22) — essentially no difference; bars are drawn near-equal to reflect that trivial gap.'}
+      },
+      { id:'rp2', type:'meta', year:2021, journal:'Medicine & Science in Sports & Exercise', n:'28 studies, 747 adults', pmid:'33433148',
+        authors:'Lopez et al.',
+        title:'Muscle growth is load-independent — but strength climbs with heavier loads',
+        sub:'A network meta-analysis comparing low, moderate, and high training loads.',
+        summary:'This network meta-analysis compared three load categories head-to-head — low (>15 reps to failure), moderate (9–15 reps), and high (≤8 reps) — across muscle growth and strength outcomes in healthy adults.',
+        method:'Twenty-eight studies (747 participants) that trained to volitional failure with low, moderate, or high loads were combined using network meta-analysis, which lets every load category be compared against every other, even across different original studies.',
+        results:[
+          'No meaningful differences in muscle hypertrophy were found between low, moderate, and high load training, overall or in subgroup analyses.',
+          'Strength gains were clearly greater with both high load and moderate load than with low load (standardized mean differences of about 0.60–0.63 and 0.34–0.35 respectively).',
+          'Untrained beginners showed bigger hypertrophy gains overall, while more-experienced lifters benefited more from doing additional weekly sessions.',
+        ],
+        takeaway:'This large analysis backs up the "reps don\'t matter much for size" finding from Schoenfeld\'s meta-analysis — while reinforcing that if maximal strength is the goal, moderate-to-heavy loads still win clearly.',
+        chart:{kind:'bar', title:'Strength gain (SMD) vs. low-load baseline', items:[
+          {label:'Low load\n(baseline)', value:0.02, display:'ref.'},
+          {label:'Moderate load\n9–15 reps', value:0.345, display:'+0.35'},
+          {label:'High load\n≤8 reps', value:0.615, display:'+0.62'},
+        ], note:'Standardized mean differences (SMD) for strength vs. low-load training, as reported: moderate load ≈ 0.34–0.35, high load ≈ 0.60–0.63. Hypertrophy showed no significant differences between loads (not shown).'}
+      },
+      { id:'rp3', type:'rct', year:2015, journal:'Journal of Strength and Conditioning Research', n:'n = 18, 8 weeks', pmid:'25853914',
+        authors:'Schoenfeld, Peterson, Ogborn, Contreras & Sonmez',
+        title:'25–35 reps grew muscle just as well as 8–12 reps — but built way less strength',
+        sub:'A head-to-head trial in well-trained men, matched for effort.',
+        summary:'This trial directly compared a classic "hypertrophy" rep range against a classic "high-rep/light-load" range in men who were already experienced lifters, tracking both muscle size and strength outcomes over 8 weeks.',
+        method:'Eighteen well-trained young men were split into a low-load group (25–35 reps per set) or a high-load group (8–12 reps per set), training 3 exercises for 3 sets each, 3x/week for 8 weeks, with both groups training to near failure.',
+        results:[
+          'Muscle thickness increased similarly in both groups across the biceps, triceps, and quadriceps — no consistent winner by load.',
+          'Back squat 1RM strength increased far more in the high-load group (19.6%) than the low-load group (8.8%), with a similar trend for bench press.',
+          'Muscular endurance (reps completed at 50% of 1RM) improved much more in the low-load group (16.6%) than the high-load group, which barely changed (−1.2%).',
+        ],
+        takeaway:'Light, high-rep training can build just as much muscle as heavy, low-rep training — but if you also want to get stronger on your main lifts, or need endurance for high-rep work, load selection still matters a lot for those specific outcomes.',
+        chart:{kind:'bar', title:'8-week % change by outcome (high load vs. low load)', height:250, items:[
+          {label:'Quad\nthickness', value:9.3, display:'9.3%', color:'var(--accent)'},
+          {label:'Quad\nthickness', value:9.5, display:'9.5%', color:'var(--accent-2)'},
+          {label:'Squat\n1RM', value:19.6, display:'19.6%', color:'var(--accent)'},
+          {label:'Squat\n1RM', value:8.8, display:'8.8%', color:'var(--accent-2)'},
+          {label:'Endurance\n@ 50% 1RM', value:1.5, display:'−1.2%', color:'var(--accent)'},
+          {label:'Endurance\n@ 50% 1RM', value:16.6, display:'16.6%', color:'var(--accent-2)'},
+        ], note:'Blue = high-load (8–12 reps) group. Teal = low-load (25–35 reps) group. Muscle thickness gains were nearly identical either way; strength favored high load, endurance favored low load.'}
+      },
+    ]
+  },
+  { id:'fiber', name:'Fiber Intake', icon:'fiber',
+    q:'How important is fiber intake?',
+    blurb:'From gut satiety to cancer immunotherapy response — fiber shows up everywhere in the outcomes literature.',
+    studies:[
+      { id:'fb1', type:'meta', year:2015, journal:'American Journal of Epidemiology', n:'17 studies, 982,411 people', pmid:'25552267',
+        authors:'Yang, Zhao, Wu, Ma & Xiang',
+        title:'Higher fiber intake is linked to a 16% lower risk of dying from any cause',
+        sub:'A meta-analysis of 17 large prospective cohort studies.',
+        summary:'This meta-analysis pooled prospective cohort studies tracking fiber intake and death from any cause, to see whether the well-known "fiber is good for you" idea holds up across the largest available body of long-term observational evidence.',
+        method:'Seventeen prospective cohort studies published between 1997 and 2014, covering 982,411 participants and 67,260 deaths, were combined. People in the highest third of fiber intake were compared against people in the lowest third.',
+        results:[
+          'People with the highest fiber intake had a statistically significant 16% lower relative risk of death from any cause compared with people with the lowest fiber intake (relative risk 0.84).',
+          'The association held up consistently across the pooled studies despite differences in populations and follow-up length.',
+        ],
+        takeaway:'Fiber intake is one of the more consistently replicated dietary predictors of long-term survival in the observational literature — a simple, low-cost lever with a large potential population-level payoff.',
+        chart:{kind:'risk', baseline:1.0, reduced:0.84, label1:'Lowest 1/3 fiber intake', label2:'Highest 1/3 fiber intake', v1:'RR 1.00', v2:'RR 0.84', note:'Relative risk of all-cause death, highest vs. lowest tertile of fiber intake, pooled across 17 cohort studies (982,411 participants, 67,260 deaths).'}
+      },
+      { id:'fb2', type:'review', year:2001, journal:'Nutrition Reviews', n:'narrative review', pmid:'11396693',
+        authors:'Howarth, Saltzman & Roberts',
+        title:'Why fiber fills you up: the mechanics behind appetite control',
+        sub:'A classic review of how dietary fiber changes hunger, digestion, and weight regulation.',
+        summary:'This widely cited review lays out the physiological mechanisms by which dietary fiber affects body weight — not through some magic fat-burning effect, but through several concrete changes to digestion and appetite signaling.',
+        method:'A narrative synthesis of the human feeding-trial and physiology literature on fiber\'s effects on gastric emptying, satiety hormones, nutrient absorption, and spontaneous energy intake.',
+        results:[
+          'Fiber increases the bulk and viscosity of food in the stomach and gut, which slows gastric emptying and prolongs feelings of fullness.',
+          'Higher-fiber meals are consistently linked to lower spontaneous energy intake at the next meal without people consciously trying to eat less.',
+          'Fermentation of fiber by gut bacteria produces short-chain fatty acids that further influence appetite-regulating hormones.',
+        ],
+        takeaway:'Fiber isn\'t a passive filler — it actively slows digestion and blunts hunger, which is a big part of why high-fiber diets make calorie control easier without feeling restrictive.',
+        chart:{kind:'flow', title:'How fiber curbs appetite', steps:['Fiber adds bulk & viscosity in the gut','Gastric emptying slows down','Satiety hormones respond, fullness lasts longer','Spontaneous next-meal calorie intake drops']}
+      },
+      { id:'fb3', type:'cohort', year:2021, journal:'Science', n:'n = 128 melanoma patients', pmid:'34941392',
+        authors:'Spencer et al.',
+        title:'Every extra 5g of daily fiber cut cancer progression risk by 30% during immunotherapy',
+        sub:'Diet and gut bacteria predicted how well melanoma patients responded to immunotherapy.',
+        summary:'This study examined whether diet and the gut microbiome influence how well cancer immunotherapy works — using melanoma patients as the test case, since immunotherapy response varies enormously between individuals for reasons that are still being worked out.',
+        method:'128 people with melanoma reported their diet and any probiotic supplement use in the month before starting immunotherapy; researchers also analyzed their gut bacteria from stool samples, then tracked cancer progression and survival. The gut-fiber link was then confirmed in mouse melanoma models fed high- vs. low-fiber diets.',
+        results:[
+          'People who reported higher fiber intake had significantly better responses to immunotherapy overall.',
+          'After adjusting for other factors, every additional 5 grams of daily fiber intake corresponded to a 30% lower risk of cancer progression or death.',
+          'People who ate the most fiber and did not use commercial probiotic supplements had the best outcomes; probiotics did not improve survival and were linked to worse outcomes in the data.',
+          'In mice, a high-fiber diet slowed tumor growth and boosted anti-cancer immune cells — but only when gut bacteria were present, confirming the microbiome as the likely link.',
+        ],
+        takeaway:'This is a striking example of fiber\'s reach beyond digestion — feeding your gut bacteria well may meaningfully change how your immune system fights disease, not just how regular you are.',
+        chart:{kind:'bar', title:'Risk of cancer progression or death, by fiber intake', items:[
+          {label:'Reference\nintake', value:1.0, display:'baseline'},
+          {label:'+5 g/day\nfiber', value:0.7, display:'−30%'},
+        ], note:'Every 5-gram increase in daily fiber intake was associated with a 30% lower risk of melanoma progression or death during immunotherapy, after adjusting for other factors (n = 128).'}
+      },
+      { id:'fb4', type:'mech', year:2023, journal:'Journal of Investigative Dermatology', n:'mouse model', pmid:'36965576',
+        authors:'(letter)',
+        title:'Fiber helps skin wounds heal cleaner, through a gut-bacteria receptor',
+        sub:'A mechanistic study linking dietary fiber to better wound healing and less scarring.',
+        summary:'This study explores a lesser-known benefit of dietary fiber: its effect on how skin wounds heal and scar, mediated through gut bacteria and a specific cell receptor called GPR43.',
+        method:'Researchers fed mice diets differing in fiber content, then created standardized skin wounds and tracked healing speed, tissue quality, and scar formation, testing the involvement of the metabolite-sensing receptor GPR43.',
+        results:[
+          'Higher dietary fiber intake was associated with faster, cleaner skin wound healing and reduced scar formation.',
+          'The effect worked through gut bacteria fermenting fiber into short-chain fatty acids, which activate the GPR43 receptor.',
+        ],
+        takeaway:'Wound healing is another downstream beneficiary of a fiber-fed gut microbiome — a reminder that "gut health" effects extend well past the digestive tract itself.',
+        chart:{kind:'flow', title:'From fiber to faster healing', steps:['Dietary fiber reaches the colon','Gut bacteria ferment it into short-chain fatty acids','Short-chain fatty acids activate the GPR43 receptor','Skin wounds heal faster with less scarring']}
+      },
+      { id:'fb5', type:'cohort', year:2024, journal:'European Journal of Nutrition', n:'n = 13,561 young adults', pmid:'39614888',
+        authors:'Lim et al.',
+        title:'A high-fiber, high-probiotic diet was linked to less eczema and dust-mite allergy',
+        sub:'A large cross-sectional study in young Chinese adults across Singapore and Malaysia.',
+        summary:'This large-scale study looked at whether everyday dietary patterns — specifically fiber and probiotic intake — relate to atopic dermatitis (eczema) and house dust mite allergy in a young adult population.',
+        method:'13,561 young Chinese adults across Singapore and Malaysia completed a validated food-frequency questionnaire; researchers analyzed how often high-fiber and probiotic-containing foods were eaten, alongside diagnosed atopic dermatitis, dust-mite allergy, and dry skin.',
+        results:[
+          'Frequent intake of high-fiber and probiotic-containing foods was associated with a lower risk of atopic dermatitis and house dust mite allergy.',
+          'The association was consistent across the large sample, adding to evidence that fiber-friendly diets support skin and immune outcomes, not just gut and metabolic ones.',
+        ],
+        takeaway:'The gut-skin connection shows up again here at population scale — a fiber- and probiotic-rich diet tracked with fewer allergic skin symptoms in over 13,000 young adults.',
+        chart:{kind:'compare', rows:[
+          {label:'Atopic dermatitis risk', left:'Low fiber & probiotic intake: higher', right:'Frequent fiber & probiotic intake: lower', winner:'right'},
+          {label:'House dust mite allergy', left:'Low fiber & probiotic intake: higher', right:'Frequent fiber & probiotic intake: lower', winner:'right'},
+        ]}
+      },
+    ]
+  },
+  { id:'magnesium', name:'Magnesium', icon:'magnesium',
+    q:'How important is magnesium, and what does it do?',
+    blurb:'Sleep, anxiety, and neuroprotection — the evidence behind one of the internet\'s favorite supplements.',
+    studies:[
+      { id:'mg1', type:'rct', year:2024, journal:'Sleep Medicine: X', n:'n = 80, 21 days', pmid:'39252819',
+        authors:'Hausenblas et al.',
+        title:'1g of magnesium L-threonate improved sleep quality in adults with sleep complaints',
+        sub:'A double-blind, placebo-controlled trial using both questionnaires and a wearable ring.',
+        summary:'Magnesium L-threonate is marketed heavily for sleep and cognition because it crosses into the brain more readily than other magnesium forms. This trial put that claim to a controlled test in adults who reported ongoing sleep problems.',
+        method:'Eighty adults aged 35–55 with self-reported sleep problems were randomized to 1g/day of magnesium L-threonate or a placebo for 21 days, in a double-blind design. Sleep and daytime function were measured with standardized questionnaires (Insomnia Severity Index, Leeds Sleep Evaluation, Restorative Sleep Questionnaire) and objectively with an Oura ring.',
+        results:[
+          'The magnesium L-threonate group showed significant improvements in self-reported sleep quality and daytime functioning compared to placebo.',
+          'Objective wearable-ring data supported the subjective improvements in sleep.',
+        ],
+        takeaway:'For adults with mild, self-reported sleep trouble, this specific magnesium form showed a real benefit in a properly controlled trial — though at 21 days it doesn\'t tell us about very long-term use.',
+        chart:{kind:'stats', stats:[
+          {k:'Design', v:'Double-blind RCT'},
+          {k:'Sample', v:'n = 80'},
+          {k:'Duration', v:'21 days'},
+          {k:'Dose', v:'1 g/day'},
+          {k:'Sleep quality', v:'Improved ↑'},
+          {k:'Daytime function', v:'Improved ↑'},
+        ]}
+      },
+      { id:'mg2', type:'review', year:2024, journal:'Cureus', n:'15 studies, 1,231 participants', pmid:'38817505',
+        authors:'Rawji et al.',
+        title:'Magnesium improved sleep or anxiety in most of the studies that measured it',
+        sub:'A systematic review across a wide range of populations and magnesium forms.',
+        summary:'This systematic review gathered every study it could find testing supplemental magnesium against self-reported anxiety or sleep quality, spanning conditions from open-heart surgery recovery to fibromyalgia to postpartum health.',
+        method:'A systematic search identified 15 eligible studies (1,231 participants) across Iran, France, Germany, Serbia, the UK, and the US. Most used magnesium oxide at 200–700 mg/day for 4–8 weeks, measured with tools like the Pittsburgh Sleep Quality Index and Hamilton Anxiety Scale.',
+        results:[
+          'Five of eight studies measuring sleep outcomes reported improvements with magnesium supplementation; benefits were more pronounced at higher doses.',
+          'Five of seven studies measuring anxiety outcomes reported reduced anxiety with magnesium supplementation.',
+          'Study quality was generally poor, doses and forms varied widely, and many supplements also contained other active ingredients like vitamin B6.',
+        ],
+        takeaway:'The evidence leans positive but isn\'t airtight — most studies found a benefit for sleep or anxiety, but small samples, mixed formulations, and inconsistent designs mean it\'s more "promising" than "proven."',
+        chart:{kind:'bar', title:'Fraction of studies reporting a benefit', items:[
+          {label:'Sleep\noutcomes', value:62.5, display:'5 / 8'},
+          {label:'Anxiety\noutcomes', value:71, display:'5 / 7'},
+        ], note:'Of studies that measured each outcome, this share reported a significant improvement with magnesium supplementation.'}
+      },
+      { id:'mg3', type:'review', year:2017, journal:'Nutrients', n:'systematic review', pmid:'28445426',
+        authors:'Boyle, Lawton & Dye',
+        title:'Magnesium helped anxiety in about half of studies — but mainly in anxiety-prone groups',
+        sub:'An earlier, influential systematic review that shaped the "magnesium for anxiety" conversation.',
+        summary:'One of the first systematic reviews to specifically evaluate magnesium supplementation for subjective anxiety and stress, breaking results down by the type of population studied rather than treating all trials as one group.',
+        method:'A systematic search across major databases (Ovid Medline, PsycInfo, Embase, CINAHL, Cochrane) identified trials of magnesium alone or combined with up to 5 other ingredients, measuring subjective anxiety or stress outcomes.',
+        results:[
+          '4 of 8 studies in anxiety-vulnerable samples reported a positive effect of magnesium on anxiety.',
+          '4 of 7 studies in premenstrual-syndrome samples, and 1 of 2 in hypertensive samples, also reported benefits.',
+          'Magnesium showed no effect on postpartum anxiety, and no study used a validated measure of subjective stress specifically.',
+        ],
+        takeaway:'Magnesium\'s anxiety benefit looks real in people already prone to anxiety symptoms, but the effect isn\'t universal across every population — and the authors were clear that better-designed trials are still needed.',
+        chart:{kind:'bar', title:'Studies reporting benefit, by population', items:[
+          {label:'Anxious\nsamples', value:50, display:'4 / 8'},
+          {label:'PMS\nsamples', value:57, display:'4 / 7'},
+          {label:'Hypertensive\nsamples', value:50, display:'1 / 2'},
+        ], note:'Share of studies within each population subgroup that reported a positive effect of magnesium on subjective anxiety. Postpartum samples showed no effect (not shown).'}
+      },
+      { id:'mg4', type:'review', year:2024, journal:'Frontiers in Endocrinology', n:'narrative review', pmid:'39387051',
+        authors:'Patel, Akimbekov, Grant, Dean, Fang & Razzaque',
+        title:'How magnesium may help protect the aging brain',
+        sub:'A mechanistic review of magnesium\'s role in neuroinflammation and cognitive decline.',
+        summary:'This review pulls together the biological mechanisms by which magnesium status may influence brain aging, neuroinflammation, and cognitive decline — the "why" behind magnesium\'s reputation as a brain-supportive mineral.',
+        method:'A narrative synthesis of preclinical and clinical literature on magnesium\'s roles in neuronal signaling, inflammation, and mitochondrial function within the central nervous system.',
+        results:[
+          'Magnesium helps regulate calcium flow through NMDA receptors, a process central to healthy nerve-cell signaling and implicated in excitotoxic brain injury when disrupted.',
+          'Adequate magnesium status is linked to lower markers of neuroinflammation, a process increasingly tied to cognitive decline.',
+          'Magnesium supports mitochondrial energy production in brain cells, which becomes more important as cells age.',
+        ],
+        takeaway:'This is a mechanistic case for magnesium\'s brain benefits rather than a head-to-head clinical trial — useful context for *why* low magnesium status is worth correcting, even though it doesn\'t by itself prove a supplement will sharpen your memory.',
+        chart:{kind:'flow', title:'Proposed pathway to neuroprotection', steps:['Adequate magnesium status','Regulates NMDA receptor calcium signaling & lowers neuroinflammation','Supports mitochondrial energy production in neurons','Associated with protection against cognitive decline']}
+      },
+    ]
+  },
+  { id:'failure', name:'Training to Failure', icon:'failure',
+    q:'Should you be taking your sets to failure?',
+    blurb:'What the meta-analyses say about grinding out that last, ugly rep.',
+    studies:[
+      { id:'tf1', type:'meta', year:2021, journal:'Journal of Strength and Conditioning Research', n:'systematic review & meta-analysis', pmid:'33555822',
+        authors:'Vieira et al.',
+        title:'Training short of failure may build just as much muscle — with better strength and power',
+        sub:'A meta-analysis comparing failure vs. non-failure resistance training.',
+        summary:'This meta-analysis pooled trials comparing resistance training taken all the way to muscular failure against training stopped a rep or two short, across muscle growth, strength, and power outcomes.',
+        method:'A systematic search and meta-analysis combined studies that randomized participants to train either to complete momentary muscular failure or to stop shy of failure, holding other variables as similar as possible.',
+        results:[
+          'Muscle hypertrophy was similar between training to failure and training short of failure.',
+          'Training not to failure produced greater improvements in strength and power output than training to failure in the pooled analysis.',
+        ],
+        takeaway:'Grinding every set to a hard, ugly failure isn\'t necessary for muscle growth, and may actually blunt strength and power gains by adding fatigue without adding extra benefit — leaving 1–3 reps "in the tank" looks like a smart default.',
+        chart:{kind:'compare', rows:[
+          {label:'Muscle hypertrophy', left:'To failure', right:'Short of failure', winner:null},
+          {label:'Strength & power gains', left:'To failure', right:'Short of failure: greater', winner:'right'},
+        ]}
+      },
+      { id:'tf2', type:'review', year:2016, journal:'Strength & Conditioning Journal', n:'applied methods paper', pmid:'27531969',
+        authors:'Helms, Cronin, Storey & Zourdos',
+        title:'The RPE / "reps in reserve" scale: a practical middle ground on failure',
+        sub:'A widely adopted tool for gauging effort without always going to complete failure.',
+        summary:'Instead of an all-or-nothing choice between "go to failure" or "don\'t," this influential paper lays out a practical scale — Rating of Perceived Exertion anchored to Reps in Reserve (RIR) — that lets lifters dial in exactly how close to failure a set should be.',
+        method:'A conceptual and applied paper adapting the RPE scale used in endurance and clinical exercise settings specifically for resistance training, anchoring each RPE score to a concrete number of reps left "in the tank."',
+        results:[
+          'An RPE of 10 means true muscular failure (0 reps left); RPE 9 means 1 rep left; RPE 8 means 2 reps left, and so on down the scale.',
+          'This gives lifters and coaches a simple, repeatable way to autoregulate intensity from session to session without needing to hit failure every set.',
+        ],
+        takeaway:'You don\'t need to choose between "always to failure" and "never to failure." The RIR/RPE scale is the practical tool that lets you land anywhere on that spectrum on purpose, set by set.',
+        chart:{kind:'scale', rows:[
+          {rpe:10, rir:'0', note:'True muscular failure — could not do another rep'},
+          {rpe:9.5, rir:'0–1', note:'Could maybe do 1 more rep'},
+          {rpe:9, rir:'1', note:'Definitely 1 more rep left'},
+          {rpe:8.5, rir:'1–2', note:'Between 1–2 reps left'},
+          {rpe:8, rir:'2', note:'Definitely 2 more reps left'},
+          {rpe:7, rir:'3', note:'3 reps left — comfortable working set'},
+          {rpe:5, rir:'5+', note:'Light warm-up effort'},
+        ]}
+      },
+    ]
+  },
+];
+
+/* Flatten helper */
+const ALL_STUDIES = [];
+TOPICS.forEach(t=> t.studies.forEach(s=>{ s.topicId=t.id; s.topicName=t.name; ALL_STUDIES.push(s); }));
+
+document.getElementById('libCounterNum').textContent = ALL_STUDIES.length;
+document.getElementById('libCounterTopics').textContent = TOPICS.length;
+
+/* ============ RENDER: HOME GRID ============ */
+const topicGrid = document.getElementById('topicGrid');
+TOPICS.forEach(t=>{
+  const card = document.createElement('button');
+  card.className = 't-card';
+  card.innerHTML = `
+    <div class="t-figure">${iconSvg(t.icon)}</div>
+    <div>
+      <div class="t-name">${t.name}</div>
+      <div class="t-count">${t.studies.length} ${t.studies.length===1?'study':'studies'} · ${t.blurb}</div>
+    </div>`;
+  card.addEventListener('click', ()=> openTopic(t.id));
+  topicGrid.appendChild(card);
+});
+
+/* ============ VIEW SWITCHING ============ */
+const viewHome = document.getElementById('view-home');
+const viewTopic = document.getElementById('view-topic');
+
+function goHome(){
+  viewTopic.classList.remove('active');
+  viewHome.classList.add('active');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant':'auto'});
+}
+
+history.replaceState({view:'home'}, '', '#home');
+
+document.getElementById('backBtn').addEventListener('click', ()=>{ history.back(); });
+
+window.addEventListener('popstate', ()=>{
+  if(backdrop.classList.contains('show')){ backdrop.classList.remove('show'); return; }
+  goHome();
+});
+
+let currentTopic = null;
+let currentFilter = 'all';
+
+function starRow(rating){
+  let out = '<div class="stars">';
+  for(let i=1;i<=5;i++){
+    out += i<=rating
+      ? `<svg class="star-filled" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z"/></svg>`
+      : `<svg class="star-empty" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z"/></svg>`;
+  }
+  return out + '</div>';
+}
+
+function openTopic(id){
+  currentTopic = TOPICS.find(t=>t.id===id);
+  currentFilter = 'all';
+  document.getElementById('groupName').textContent = currentTopic.q;
+  document.getElementById('groupSub').textContent = currentTopic.blurb;
+  document.getElementById('groupFigure').innerHTML = iconSvg(currentTopic.icon);
+  renderFilters();
+  renderStudyList();
+  viewHome.classList.remove('active');
+  viewTopic.classList.add('active');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant':'auto'});
+  history.pushState({view:'topic', id}, '', '#'+id);
+}
+
+function renderFilters(){
+  const row = document.getElementById('filterRow');
+  const types = ['all', ...new Set(currentTopic.studies.map(s=>s.type))];
+  row.innerHTML = '';
+  types.forEach(ty=>{
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (ty===currentFilter ? ' active':'');
+    chip.textContent = ty==='all' ? 'All studies' : TYPE_LABEL[ty];
+    chip.addEventListener('click', ()=>{ currentFilter = ty; renderFilters(); renderStudyList(); });
+    row.appendChild(chip);
+  });
+}
+
+function thumbFor(study){
+  const c = study.chart;
+  if(!c) return flowMini();
+  if(c.kind==='bar') return barChartMini(c.items);
+  if(c.kind==='risk') return barChartMini([{label:'',value:c.baseline},{label:'',value:c.reduced}]);
+  if(c.kind==='line') return lineTrendMini(c.rising);
+  if(c.kind==='timeline') return timelineMini();
+  if(c.kind==='compare') return compareMini();
+  if(c.kind==='scale') return scaleMini();
+  if(c.kind==='flow') return flowMini();
+  if(c.kind==='stats') return compareMini();
+  return flowMini();
+}
+
+function renderStudyList(){
+  const list = document.getElementById('stList');
+  list.innerHTML = '';
+  const items = currentTopic.studies.filter(s=> currentFilter==='all' || s.type===currentFilter);
+  items.forEach(s=>{
+    const card = document.createElement('button');
+    card.className = 'st-card';
+    card.innerHTML = `
+      <div class="st-thumb">${thumbFor(s)}</div>
+      <div class="st-body">
+        <div class="st-kicker"><span class="type-tag">${TYPE_LABEL[s.type]}</span><span class="year-tag">${s.year}</span></div>
+        <div class="st-name">${s.title}</div>
+        <div class="st-sub">${s.sub}</div>
+        <div class="st-foot">
+          <div class="evid"><span class="evid-label">Evidence</span>${starRow(TYPE_EVID[s.type])}</div>
+          <span class="n-tag">${s.n}</span>
+        </div>
+      </div>`;
+    card.addEventListener('click', ()=> openModal(s));
+    list.appendChild(card);
+  });
+}
+
+/* ============ CHART BLOCK BUILDER ============ */
+function buildChartBlock(chart){
+  if(!chart) return '';
+  let inner = '', title = chart.title || '';
+  if(chart.kind==='bar'){
+    inner = barChart(chart.items, {height:chart.height||220});
+  } else if(chart.kind==='risk'){
+    inner = riskMeter(chart.baseline, chart.reduced, chart);
+  } else if(chart.kind==='line'){
+    inner = `<svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+      <line x1="34" y1="186" x2="546" y2="186" stroke="var(--border)" stroke-width="1.5"/>
+      <line x1="34" y1="20" x2="34" y2="186" stroke="var(--border)" stroke-width="1.5"/>
+      <polyline points="34,178 130,150 226,112 322,78 418,52 546,32" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="546" cy="32" r="6" fill="var(--accent-2)"/>
+      <text x="34" y="204" font-family="Inter, sans-serif" font-size="11" fill="var(--text-faint)">Fewer weekly sets</text>
+      <text x="546" y="204" text-anchor="end" font-family="Inter, sans-serif" font-size="11" fill="var(--text-faint)">More weekly sets</text>
+      <text x="18" y="26" font-family="Inter, sans-serif" font-size="11" fill="var(--text-faint)" transform="rotate(-90 18 100)" text-anchor="middle">Muscle growth →</text>
+    </svg>`;
+  } else if(chart.kind==='timeline'){
+    inner = `<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="46" width="150" height="40" rx="10" fill="var(--accent)"/>
+      <text x="85" y="70" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-weight="700" font-size="13">Train · 20 wks</text>
+      <rect x="168" y="46" width="230" height="40" rx="10" fill="var(--border)"/>
+      <text x="283" y="70" text-anchor="middle" fill="var(--text-dim)" font-family="Inter, sans-serif" font-weight="700" font-size="13">Detrain · 30–32 wks</text>
+      <rect x="406" y="46" width="144" height="40" rx="10" fill="var(--accent-2)"/>
+      <text x="478" y="70" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-weight="700" font-size="13">Retrain · 6 wks</text>
+      <text x="85" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="var(--text-faint)">Strength &amp; size build</text>
+      <text x="283" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="var(--text-faint)">Partial, not total, loss</text>
+      <text x="478" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="var(--text-faint)">Rapid rebuild</text>
+    </svg>`;
+  } else if(chart.kind==='flow'){
+    const steps = chart.steps;
+    const h = 60 + steps.length*72;
+    let boxes = '';
+    steps.forEach((st,i)=>{
+      const y = 10 + i*72;
+      boxes += `<rect x="10" y="${y}" width="540" height="52" rx="12" fill="${i%2===0?'var(--accent-soft)':'var(--accent2-soft)'}" stroke="${i%2===0?'var(--accent)':'var(--accent-2)'}" stroke-width="1.5"/>`;
+      boxes += `<text x="280" y="${y+31}" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" font-weight="600" fill="var(--text)">${st}</text>`;
+      if(i<steps.length-1){
+        boxes += `<path d="M280 ${y+62} v14" stroke="var(--text-faint)" stroke-width="2.5" marker-end="url(#arrow)"/>`;
+      }
+    });
+    inner = `<svg viewBox="0 0 560 ${h-14}" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--text-faint)"/></marker></defs>
+      ${boxes}
+    </svg>`;
+  } else if(chart.kind==='scale'){
+    inner = `<table class="scale-table"><thead><tr><th>RPE</th><th>Reps in reserve</th><th>What it feels like</th></tr></thead><tbody>
+      ${chart.rows.map(r=>`<tr><td class="rpe-num">${r.rpe}</td><td>${r.rir}</td><td>${r.note}</td></tr>`).join('')}
+    </tbody></table>`;
+    return `<div class="chart-box"><h4 style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin:0 0 12px;font-weight:700;">${title}</h4>${inner}</div>`;
+  } else if(chart.kind==='compare'){
+    inner = `<div class="compare-wrap">${chart.rows.map(r=>`
+      <div class="compare-row">
+        <div class="lbl">${r.label}</div>
+        <div class="compare-cell${r.winner==='left'?' win':''}">${r.winner==='left'?`<div class="cc-title">${iconSvg('check')}Wins</div>`:''}${r.left}</div>
+        <div class="compare-cell${r.winner==='right'?' win':''}">${r.winner==='right'?`<div class="cc-title">${iconSvg('check')}Wins</div>`:''}${r.right}</div>
+      </div>`).join('')}</div>`;
+    return inner;
+  } else if(chart.kind==='stats'){
+    inner = `<div class="stat-row" style="grid-template-columns:repeat(3,1fr);">${chart.stats.map(s=>`<div class="stat-chip"><div class="k">${s.k}</div><div class="v">${s.v}</div></div>`).join('')}</div>`;
+    return inner;
+  }
+  const note = chart.note ? `<p class="chart-note">${chart.note}</p>` : '';
+  return `<div class="chart-box">${title?`<h4 style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin:0 0 4px;font-weight:700;">${title}</h4>`:''}${inner}${note}</div>`;
+}
+
+/* ============ MODAL ============ */
+const backdrop = document.getElementById('modalBackdrop');
+function openModal(s){
+  const chartHTML = buildChartBlock(s.chart);
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-kicker">
+      <span class="type-tag">${TYPE_LABEL[s.type]}</span>
+      <span class="year-tag">${s.journal} · ${s.year}</span>
+    </div>
+    <div class="modal-head"><h2>${s.title}</h2></div>
+    <div class="modal-authors">${s.authors} · ${s.n} · <span class="mono">${s.topicName}</span></div>
+
+    <div class="info-box tint">
+      <h4>${iconSvg('book')}The question</h4>
+      <p>${s.summary}</p>
+    </div>
+
+    ${chartHTML}
+
+    <div class="info-box">
+      <h4>${iconSvg('flask')}How the study was done</h4>
+      <p>${s.method}</p>
+    </div>
+
+    <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin:0 0 10px;font-weight:700;">${iconSvg('chart').replace('<svg','<svg style="width:12px;height:12px;vertical-align:-1px;margin-right:5px;"')}Key results</h4>
+    <ul class="results-list">${s.results.map(r=>`<li><span class="r-mark">${iconSvg('check')}</span><span>${r}</span></li>`).join('')}</ul>
+
+    <div class="info-box take">
+      <h4>${iconSvg('meta')}Practical takeaway</h4>
+      <p>${s.takeaway}</p>
+    </div>
+
+    <div class="cite-box">
+      <div class="cite-text">${s.authors} (${s.year}). <em>${s.journal}</em>. PMID: ${s.pmid}</div>
+      <a class="cite-link" href="https://pubmed.ncbi.nlm.nih.gov/${s.pmid}/" target="_blank" rel="noopener">${iconSvg('link')}View on PubMed</a>
+    </div>`;
+  backdrop.classList.add('show');
+}
+document.getElementById('modalClose').addEventListener('click', ()=> backdrop.classList.remove('show'));
+backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) backdrop.classList.remove('show'); });
+
+/* ============ GLOBAL SEARCH ============ */
+const searchInput = document.getElementById('globalSearch');
+const searchResults = document.getElementById('searchResults');
+const searchClear = document.getElementById('searchClear');
+
+function buildSearchIndex(){
+  const index = [];
+  TOPICS.forEach(t=>{
+    index.push({type:'topic', topicId:t.id, name:t.q, sub:t.blurb, icon:t.icon});
+    t.studies.forEach(s=>{
+      index.push({type:'study', topicId:t.id, name:s.title, sub:t.name+' · '+s.year, icon:t.icon, study:s});
+    });
+  });
+  return index;
+}
+const SEARCH_INDEX = buildSearchIndex();
+
+function runSearch(q){
+  q = q.trim().toLowerCase();
+  if(!q){ searchResults.classList.remove('show'); searchClear.style.display='none'; return; }
+  searchClear.style.display='flex';
+  const matches = SEARCH_INDEX.filter(item=> item.name.toLowerCase().includes(q) || item.sub.toLowerCase().includes(q)).slice(0,8);
+
+  if(!matches.length){
+    searchResults.innerHTML = `<div class="search-empty">No matches for "${q}"</div>`;
+    searchResults.classList.add('show');
+    return;
+  }
+
+  const topicMatches = matches.filter(m=>m.type==='topic');
+  const studyMatches = matches.filter(m=>m.type==='study');
+  let html = '';
+
+  if(topicMatches.length){
+    html += `<div class="search-group-label">Topics</div>`;
+    topicMatches.forEach(item=>{
+      html += `<button class="search-result-row" data-type="topic" data-topic="${item.topicId}">
+        <div class="search-result-thumb">${iconSvg(item.icon)}</div>
+        <div><div class="search-result-name">${item.name}</div><div class="search-result-sub">${item.sub}</div></div>
+      </button>`;
+    });
+  }
+  if(studyMatches.length){
+    html += `<div class="search-group-label">Studies</div>`;
+    studyMatches.forEach(item=>{
+      html += `<button class="search-result-row" data-type="study" data-topic="${item.topicId}" data-study="${item.study.id}">
+        <div class="search-result-thumb">${iconSvg(item.icon)}</div>
+        <div><div class="search-result-name">${item.name}</div><div class="search-result-sub">${item.sub}</div></div>
+      </button>`;
+    });
+  }
+  searchResults.innerHTML = html;
+  searchResults.classList.add('show');
+}
+
+searchInput.addEventListener('input', ()=> runSearch(searchInput.value));
+searchInput.addEventListener('focus', ()=> { if(searchInput.value.trim()) runSearch(searchInput.value); });
+
+searchClear.addEventListener('click', ()=>{
+  searchInput.value = '';
+  searchResults.classList.remove('show');
+  searchClear.style.display = 'none';
+  searchInput.focus();
+});
+
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('.search-wrap')) searchResults.classList.remove('show');
+});
+
+searchResults.addEventListener('click', (e)=>{
+  const row = e.target.closest('.search-result-row');
+  if(!row) return;
+  const topicId = row.dataset.topic;
+  openTopic(topicId);
+  if(row.dataset.type === 'study'){
+    const studyId = row.dataset.study;
+    const s = currentTopic.studies.find(x=> x.id===studyId);
+    if(s) setTimeout(()=> openModal(s), 50);
+  }
+  searchResults.classList.remove('show');
+  searchInput.value = '';
+  searchClear.style.display = 'none';
+});
+
+/* ============ THEME TOGGLE ============ */
+const toggle = document.getElementById('themeToggle');
+function setMode(mode){
+  document.documentElement.classList.remove('force-light','force-dark');
+  if(mode==='light') document.documentElement.classList.add('force-light');
+  if(mode==='dark') document.documentElement.classList.add('force-dark');
+  toggle.querySelectorAll('button').forEach(b=> b.classList.toggle('active', b.dataset.mode===mode));
+}
+
+toggle.querySelectorAll('button').forEach(b=> b.addEventListener('click', ()=> setMode(b.dataset.mode)));
+setMode('system');
+</script>
+</body>
+</html>
