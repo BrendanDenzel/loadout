@@ -19,7 +19,7 @@
     --text-dim:#5B6270;
     --text-faint:#8A90A0;
     --accent:#E4572E;
-    --accent-2:#2F6FED;
+    --accent-2:#dd1106;
     --accent-soft:rgba(228,87,46,0.12);
     --accent2-soft:rgba(47,111,237,0.12);
     --gold:#E3A008;
@@ -41,7 +41,7 @@
       --text-dim:#9AA1B1;
       --text-faint:#666D7E;
       --accent:#FF7A54;
-      --accent-2:#5B93FF;
+      --accent-2:#dd1106;
       --accent-soft:rgba(255,122,84,0.14);
       --accent2-soft:rgba(91,147,255,0.14);
       --gold:#F0B429;
@@ -51,13 +51,13 @@
   }
   html.force-light{ color-scheme: light;
     --bg:#F3F4F7;--bg-elevated:#FFFFFF;--surface:#FFFFFF;--surface-2:#EAECF1;--border:#DEE1E8;--muscle-img-bg:#FFFFFF;
-    --text:#12151B;--text-dim:#5B6270;--text-faint:#8A90A0;--accent:#E4572E;--accent-2:#2F6FED;
+    --text:#12151B;--text-dim:#5B6270;--text-faint:#8A90A0;--accent:#E4572E;--accent-2:#dd1106;
     --accent-soft:rgba(228,87,46,0.12);--accent2-soft:rgba(47,111,237,0.12);--gold:#E3A008;
     --shadow:0 1px 2px rgba(20,22,30,0.04), 0 8px 24px -12px rgba(20,22,30,0.12);
   }
   html.force-dark{ color-scheme: dark;
     --bg:#0D0F13;--bg-elevated:#15181F;--surface:#171A21;--surface-2:#1E222B;--border:#282D38;--muscle-img-bg:#232833;
-    --text:#EDEFF3;--text-dim:#9AA1B1;--text-faint:#666D7E;--accent:#FF7A54;--accent-2:#5B93FF;
+    --text:#EDEFF3;--text-dim:#9AA1B1;--text-faint:#666D7E;--accent:#FF7A54;--accent-2:#dd1106;
     --accent-soft:rgba(255,122,84,0.14);--accent2-soft:rgba(91,147,255,0.14);--gold:#F0B429;
     --shadow:0 1px 2px rgba(0,0,0,0.3), 0 12px 32px -14px rgba(0,0,0,0.6);
   }
@@ -182,7 +182,7 @@
   .goal-endurance{background:var(--accent2-soft); color:var(--accent-2);}
 
     /* ---------- App tab strip ---------- */
-  .app-tabs{display:flex; gap:8px; padding:14px 20px 0;}
+  .app-tabs{display:flex; flex-wrap:wrap; gap:8px; padding:14px 20px 0;}
   .app-tab{
     display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; padding:9px 15px;
     border-radius:999px; background:var(--surface); border:1px solid var(--border); color:var(--text-faint);
@@ -420,15 +420,22 @@
     <rect x="2" y="9" width="4" height="6" rx="1"/>
     <rect x="18" y="9" width="4" height="6" rx="1"/>
   </svg>
-  Exercise Library
+  Exercises
 </a>
     <a class="app-tab" href="studies.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
       <path d="M14 4v5h5M8 13h8M8 17h5"/>
     </svg>
-    Research &amp; Studies
+    Studies
   </a>
+  <a class="app-tab" href="calculators.html">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="2" width="16" height="20" rx="2"/>
+    <path d="M8 6h8M7 11h1M11.5 11h1M16 11h1M7 15h1M11.5 15h1M16 15h1M7 19h1M11.5 19h1M16 19h1"/>
+  </svg>
+  Calculators
+</a>
 </nav>
 
   <!-- HOME VIEW -->
