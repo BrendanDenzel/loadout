@@ -9,11 +9,11 @@
 <style>
 
 :root{
-    --bg:#F2F7F3;
+    --bg:#F3F4F7;
     --bg-elevated:#FFFFFF;
     --surface:#FFFFFF;
-    --surface-2:#E8F3EA;
-    --border:#D7E7DA;
+    --surface-2:#EAECF1;
+    --border:#DEE1E8;
     --text:#101A13;
     --text-dim:#57685C;
     --text-faint:#8A9A8E;
@@ -36,7 +36,7 @@
       --bg-elevated:#15181F;
       --surface:#171A21;
       --surface-2:#1E222B;
-      --border:#243026;
+      --border:#282D38;
       --text:#EBF3EA;
       --text-dim:#9AAB9B;
       --text-faint:#63715F;
@@ -52,7 +52,11 @@
     }
   }
   html.force-light{ color-scheme: light;
-    --bg:#F2F7F3;--bg-elevated:#FFFFFF;--surface:#FFFFFF;--surface-2:#E8F3EA;--border:#D7E7DA;
+    --bg:#F3F4F7;
+    --bg-elevated:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-2:#EAECF1;
+    --border:#DEE1E8;
     --text:#101A13;--text-dim:#57685C;--text-faint:#8A9A8E;--accent:#22A559;--accent-2:#0D9488;
     --accent-soft:rgba(34,165,89,0.12);--accent2-soft:rgba(13,148,136,0.12);--gold:#E3A008;
     --bad:#E4572E;--bad-soft:rgba(228,87,46,0.10);
@@ -89,15 +93,16 @@
   }
   .brand{display:flex; align-items:center; gap:10px;}
   .brand-mark{
-    width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    width:32px; height:32px; border-radius:9px;
+    background:linear-gradient(135deg,#E4572E,#dd1106);
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
   }
   .brand-mark svg{width:18px; height:18px;}
   .brand-name{font-weight:700; font-size:18px;}
-  .brand-name span{color:var(--accent);}
+  .brand-name span{color:#E4572E;}
   .theme-toggle{display:flex; align-items:center; gap:2px; background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px;}
   .theme-toggle button{width:30px; height:30px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-faint);}
-  .theme-toggle button.active{background:var(--surface); color:var(--accent); box-shadow:var(--shadow);}
+  .theme-toggle button.active{background:var(--surface); color:#E4572E; box-shadow:var(--shadow);}
   .theme-toggle svg{width:15px;height:15px;}
 
   /* ---------- App tab strip ---------- */
@@ -298,6 +303,14 @@
       </svg>
       Exercises
     </a>
+    <a class="app-tab" href="programs.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <path d="M3 10h18M8 2v4M16 2v4"/>
+        <path d="M8 15l2 2 4-4"/>
+      </svg>
+      Programs
+    </a>
     <a class="app-tab" href="studies.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
@@ -320,7 +333,7 @@
     <section class="hero">
       <span class="eyebrow">Gym Calculators</span>
       <h1>Know your numbers.<br>Train off real math.</h1>
-      <p>Everything runs right here on the page — plug in your stats and get an instant, editable result. No accounts, no round-tripping to a server.</p>
+      <p>Plug in your stats and get an instant results.</p>
     </section>
  
     <div class="search-wrap">
